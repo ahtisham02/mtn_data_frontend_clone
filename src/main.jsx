@@ -14,7 +14,6 @@ import "react-toastify/dist/ReactToastify.css";
 const intercomAppId = import.meta.env.VITE_INTERCOM_APP_ID;
 const googleAppId = import.meta.env.VITE_APP_GOOGLE_CLIENTID;
 
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
