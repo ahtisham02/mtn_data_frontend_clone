@@ -22,9 +22,8 @@ const MainRoutes = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         {/* <Route path="/subscription/success" element={<SubscriptionSuccess />} />  */}
-        <Route path="/subscription/success" element={<SubscriptionSuccess />}>
-          <Route path="?session_id=:sessionId" />
-        </Route>
+        <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+
         {/* <Route path="/Pricing" element={<Pricing />} />  */}
 
         <Route
