@@ -12,7 +12,7 @@ export default function SubscriptionSuccess() {
   const [processed, setProcessed] = useState(false);
 
   useEffect(() => {
-    if (processed) return; // Skip if already processed
+    if (processed) return;
 
     const sessionId = searchParams.get("session_id");
     if (!sessionId) {
@@ -22,12 +22,13 @@ export default function SubscriptionSuccess() {
 
     const recordPayment = async () => {
       try {
+        // Get session info from your Vercel serverless function
         const stripeResponse = await fetch(`/api/stripe/session?session_id=${sessionId}`);
-
-        if (!stripeResponse.ok) throw new Error("Failed to fetch Stripe session");
-
         const stripeData = await stripeResponse.json();
 
+        if (!stripeResponse.ok) throw new Error(stripeData.error?.message || "Stripe session fetch failed");
+
+        // Send data to your backend to record the subscription
         const apiResponse = await apiRequest(
           "post",
           "/user/subscription/callback",
@@ -45,11 +46,13 @@ export default function SubscriptionSuccess() {
         setStatus("success");
         toast.success("Payment recorded successfully!");
       } catch (error) {
-        console.error("Recording failed:", error);
+        console.error("Payment recording failed:", error);
         setStatus("error");
-        toast.error(error.response?.data?.message || "Payment recording failed");
+        toast.error(
+          error?.response?.data?.message || error?.message || "Payment recording failed"
+        );
       } finally {
-        // Remove session_id and mark as processed
+        // Clean URL and prevent re-processing
         searchParams.delete("session_id");
         setSearchParams(searchParams, { replace: true });
         setProcessed(true);
@@ -57,7 +60,7 @@ export default function SubscriptionSuccess() {
     };
 
     recordPayment();
-  }, [searchParams, setSearchParams, processed, VITE_STRIPE_SECRET_KEY]);
+  }, [searchParams, setSearchParams, processed, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
@@ -76,7 +79,6 @@ export default function SubscriptionSuccess() {
             <p className="text-xl text-muted-foreground">
               Thank you for subscribing to our service
             </p>
-
             <button
               onClick={() => navigate("/dashboard")}
               className="mt-8 px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg text-lg font-medium transition-colors"
