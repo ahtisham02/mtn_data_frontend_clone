@@ -169,10 +169,12 @@ const JsonViewer = ({ data }) => {
     if (typeof jsonString !== "string") {
       jsonString = JSON.stringify(jsonString, null, 2);
     }
+
     jsonString = jsonString
-      .replace(/&/g, "&")
-      .replace(/</g, "<")
-      .replace(/>/g, ">");
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
     return jsonString.replace(
       /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
       (match) => {
@@ -188,9 +190,10 @@ const JsonViewer = ({ data }) => {
       }
     );
   };
+
   return (
     <pre
-      className="text-sm bg-background border border-border p-4 rounded-lg overflow-x-auto"
+      className="text-sm bg-background border border-border p-4 rounded-lg overflow-x-auto overflow-y-auto max-h-[500px] whitespace-pre-wrap"
       dangerouslySetInnerHTML={{ __html: highlightJson(data) }}
     />
   );

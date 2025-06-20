@@ -80,10 +80,8 @@ const SignupPage = () => {
   const handleGoogleAuth = async (googleProfile) => {
     setIsGoogleLoading(true);
     try {
-      const response = await apiRequest("post", "/auth/google-login", {
-        name: googleProfile.name,
+      const response = await apiRequest("post", "/user/google/callback", {
         email: googleProfile.email,
-        googleId: googleProfile.id,
       });
       handleAuthSuccess(response.data);
     } catch (error) {

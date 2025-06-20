@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { CheckCircle, XCircle, ArrowRight, Gift, Zap, TrendingUp, Rocket, Building2 } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { loadStripe } from '@stripe/stripe-js';
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -137,7 +137,6 @@ const PackagesSection = () => {
 
     return (
         <section id="packages" className="py-16 bg-background md:py-24">
-            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
             <div className="container px-4 mx-auto max-w-7xl">
                 <div className="text-center">
                     <p className="text-sm font-bold tracking-wider uppercase text-accent">All-Inclusive Value</p>

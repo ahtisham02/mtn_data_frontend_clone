@@ -420,7 +420,7 @@ export default function EndpointPage({ endpoint }) {
   const [activeRequestTab, setActiveRequestTab] = useState("Params");
   const requestTabs = ["Parameters", `Headers`, "Authorization", "Body"];
   
-  const userToken = useSelector((state) => state.auth.userToken);
+  const Hash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash);  
 
   useEffect(() => {
     if (endpoint) {
@@ -444,8 +444,8 @@ export default function EndpointPage({ endpoint }) {
       editData.headers.map((h) => [h.key, h.value])
     );
 
-    if (userToken) {
-      headers['x-auth-token'] = 'f13f0d5186dfe0cbff990639b640662768bb0ebcc64a08fabc752427d5ad62b8';
+    if (Hash) {
+      headers['x-auth-token'] = Hash;
     }
 
     let urlTemplate = endpoint.url;

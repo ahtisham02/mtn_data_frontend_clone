@@ -16,29 +16,29 @@ const googleAppId = import.meta.env.VITE_APP_GOOGLE_CLIENTID;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  // <React.StrictMode>
-  <IntercomProvider appId={intercomAppId}>
-    <GoogleOAuthProvider clientId={googleAppId}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <BrowserRouter>
-            <MainRoutes />
-            <ToastContainer
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              className="z-[9999]"
-            />
-          </BrowserRouter>
-        </PersistGate>
-      </Provider>
-    </GoogleOAuthProvider>
-  </IntercomProvider>
-  // </React.StrictMode>
+  <>
+    <ToastContainer
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      className="z-[9999]"
+    />
+    <IntercomProvider appId={intercomAppId}>
+      <GoogleOAuthProvider clientId={googleAppId}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <BrowserRouter>
+              <MainRoutes />
+            </BrowserRouter>
+          </PersistGate>
+        </Provider>
+      </GoogleOAuthProvider>
+    </IntercomProvider>
+  </>
 );
