@@ -10,7 +10,6 @@ export default function SubscriptionSuccess() {
   const [status, setStatus] = useState("loading");
   const [subscriptionDetails, setSubscriptionDetails] = useState(null);
   const [processed, setProcessed] = useState(false);
-  const VITE_STRIPE_SECRET_KEY = import.meta.env.VITE_STRIPE_SECRET_KEY;
 
   useEffect(() => {
     if (processed) return; // Skip if already processed
@@ -23,15 +22,7 @@ export default function SubscriptionSuccess() {
 
     const recordPayment = async () => {
       try {
-        const stripeResponse = await fetch(
-          `https://api.stripe.com/v1/checkout/sessions/${sessionId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${VITE_STRIPE_SECRET_KEY}`,
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          }
-        );
+        const stripeResponse = await fetch(`/api/stripe/session?session_id=${sessionId}`);
 
         if (!stripeResponse.ok) throw new Error("Failed to fetch Stripe session");
 
