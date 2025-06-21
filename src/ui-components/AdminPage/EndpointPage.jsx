@@ -10,6 +10,8 @@ import { apiData, collections } from "../../utils/data";
 import ContactModal from "./ContactModal";
 import Spinner from "./Spinner";
 import ApiResponseViewer from "./ApiResponseViewer";
+import { removeUserInfo } from "../../auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const analyticsEndpointUsage = collections
   .flatMap((collection) =>
@@ -422,6 +424,7 @@ export default function EndpointPage({ endpoint }) {
   
   const Hash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash); 
   const token = useSelector((state) => state.auth.userToken);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (endpoint) {
@@ -440,7 +443,7 @@ export default function EndpointPage({ endpoint }) {
     setIsLoading(true);
     setTestResult(null);
     const startTime = performance.now();
-    
+
     const headers = Object.fromEntries(
       editData.headers.map((h) => [h.key, h.value])
     );
@@ -448,7 +451,7 @@ export default function EndpointPage({ endpoint }) {
     if (Hash) {
       headers['x-auth-token'] = Hash;
     }
-    
+
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -472,6 +475,14 @@ export default function EndpointPage({ endpoint }) {
 
     try {
       const response = await fetch(finalUrl, requestOptions);
+
+      if (response.status === 401) {
+        console.log("Unauthorized request (401) from fetch. Logging out user.");
+        toast.success("Your session has expired. Please log in again.");
+        dispatch(removeUserInfo());
+        return; 
+      }
+
       const endTime = performance.now();
       const total = Math.round(endTime - startTime);
       const contentType = response.headers.get("content-type");

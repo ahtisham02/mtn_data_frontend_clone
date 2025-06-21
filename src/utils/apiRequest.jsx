@@ -1,4 +1,7 @@
 import axios from "axios";
+import { store } from "../store/store";
+import { removeUserInfo } from "../auth/authSlice";
+import { toast } from "react-toastify";
 
 const apiRequest = async (method, url, data = {}, token, headers = {}) => {
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -30,6 +33,12 @@ const apiRequest = async (method, url, data = {}, token, headers = {}) => {
     return response;
   } catch (error) {
     console.error("API Request Error:", error);
+    if (error.response && error.response.status === 401) {
+      console.log("Unauthorized request. Logging out user.");
+      store.dispatch(removeUserInfo());
+      window.location.href = "/login";
+      toast.success("Your session has expired. Please log in again.");
+    }
     throw error;
   }
 };
