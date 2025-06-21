@@ -20,7 +20,8 @@ export default {
       },
       animation: {
         aurora: "aurora 20s ease-in-out infinite",
-        marquee: 'marquee 40s linear infinite',
+        marquee: "marquee 40s linear infinite",
+        stream: "stream 1.5s ease-in-out infinite",
       },
       keyframes: {
         aurora: {
@@ -28,8 +29,12 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
         },
         marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-100%)' },
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+        stream: {
+          "0%, 100%": { transform: "scaleY(0.1)" },
+          "50%": { transform: "scaleY(1)" },
         },
       },
     },

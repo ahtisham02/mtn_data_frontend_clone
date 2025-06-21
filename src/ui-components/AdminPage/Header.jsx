@@ -10,6 +10,8 @@ import {
   LogOut,
   Mountain,
   FileCode2,
+  FileClock,
+  CreditCard,
 } from "lucide-react";
 import { collections } from "../../utils/data";
 import { toast } from "react-toastify";
@@ -82,16 +84,21 @@ export default function Header() {
           <div className="absolute top-full mt-2 w-full bg-card border border-border rounded-md shadow-lg z-10 max-h-80 overflow-y-auto">
             {filteredEndpoints.length > 0 ? (
               <ul>
-                {filteredEndpoints.map(ep => (
+                {filteredEndpoints.map((ep) => (
                   <li key={ep.slug}>
-                    <Link 
-                      to={`/endpoint/${ep.slug}`} 
-                      onClick={() => { setIsSearchOpen(false); setSearchTerm(''); }} 
+                    <Link
+                      to={`/endpoint/${ep.slug}`}
+                      onClick={() => {
+                        setIsSearchOpen(false);
+                        setSearchTerm("");
+                      }}
                       className="flex items-center gap-4 p-3 hover:bg-background"
                     >
                       <FileCode2 className="h-5 w-5 text-accent flex-shrink-0" />
                       <div>
-                        <p className="font-semibold text-foreground">{ep.name}</p>
+                        <p className="font-semibold text-foreground">
+                          {ep.name}
+                        </p>
                         <p className="text-sm text-muted">{ep.method}</p>
                       </div>
                     </Link>
@@ -117,18 +124,41 @@ export default function Header() {
                 <li>
                   <Link
                     to="/profile"
-                    className="w-full text-left flex items-center gap-2 p-2 text-sm rounded-md hover:bg-background"
-                    onClick={() => setIsUserMenuOpen(false)} // Good practice to close menu on navigation
+                    className="w-full text-left flex items-center gap-3 p-2 text-sm rounded-md hover:bg-background text-foreground"
+                    onClick={() => setIsUserMenuOpen(false)}
                   >
-                    <User className="w-4 h-4 text-muted" /> Profile
+                    <User className="w-4 h-4 text-muted" />
+                    Profile
+                  </Link>
+                </li>
+                 <li>
+                  <Link
+                    to="/logs"
+                    className="w-full text-left flex items-center gap-3 p-2 text-sm rounded-md hover:bg-background text-foreground"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    <FileClock className="w-4 h-4 text-muted" />
+                    API Logs
                   </Link>
                 </li>
                 <li>
+                  <Link
+                    to="/billing"
+                    className="w-full text-left flex items-center gap-3 p-2 text-sm rounded-md hover:bg-background text-foreground"
+                    onClick={() => setIsUserMenuOpen(false)}
+                  >
+                    <CreditCard className="w-4 h-4 text-muted" />
+                    Billing
+                  </Link>
+                </li>
+                <div className="my-1 border-t border-border -mx-1" />
+                <li>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left flex items-center gap-2 p-2 text-sm rounded-md hover:bg-background text-red-500"
+                    className="w-full text-left flex items-center gap-3 p-2 text-sm rounded-md hover:bg-background text-red-500"
                   >
-                    <LogOut className="w-4 h-4 text-red-500" /> Logout
+                    <LogOut className="w-4 h-4 text-red-500" />
+                    Logout
                   </button>
                 </li>
               </ul>

@@ -15,16 +15,15 @@ import ProfilePage from "../pages/AdminPages/ProfilePage";
 import EndpointDetailPage from "../pages/AdminPages/EndpointDetailPage";
 import AdminLayout from "./AdminLayout";
 import RouteMiddleware from "../routes/RouteMIddleware";
+import ApiLogs from "../pages/AdminPages/ApiLogs";
+import SubscriptionHistory from "../pages/AdminPages/SubscriptionHistory";
 
 const MainRoutes = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* <Route path="/subscription/success" element={<SubscriptionSuccess />} />  */}
         <Route path="/subscription/success" element={<SubscriptionSuccess />} />
-
-        {/* <Route path="/Pricing" element={<Pricing />} />  */}
 
         <Route
           element={
@@ -50,6 +49,9 @@ const MainRoutes = () => {
         >
           <Route path="/dashboard" element={<ApiOverviewPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/logs" element={<ApiLogs />} />
+          <Route path="/billing" element={<SubscriptionHistory />} />
+
           <Route
             path="/endpoint/:endpointName"
             element={<EndpointDetailPage />}
