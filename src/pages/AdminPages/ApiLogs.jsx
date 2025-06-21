@@ -2,9 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Activity, Database } from 'lucide-react';
-import apiRequest from '../../utils/apiRequest';
 import DataTable from '../../ui-components/DataTable';
 import { format } from 'date-fns';
+import apiRequest from '../../utils/apiRequest';
 
 const MethodBadge = ({ method }) => {
   const colors = {
@@ -42,28 +42,21 @@ export default function ApiLogs() {
         return;
       }
        try {
-        const response = await fetch("https://salesdriver.co:8089/api/user/fetch-logs", {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'x-auth-token': userHash
-          }
-        });
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred' }));
-          throw new Error(errorData.message || 'Failed to fetch logs');
-        }
+        const response = await apiRequest('get', '/user/fetch-logs', null, token, { 'x-auth-token': userHash });
         setLogs(response.data.logs || []);
       } catch (err) {
-        const errorMessage = err.response?.data?.message || 'Failed to fetch API logs.';
-        setError(errorMessage);
-        toast.error(errorMessage);
+        setError(err.message);
+        toast.error(err.message);
       } finally {
         setLoading(false);
       }
     };
     fetchLogs();
   }, [token, userHash]);
+
+  const sortedLogs = useMemo(() => {
+    return [...logs].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [logs]);
 
   const columns = useMemo(() => [
     { header: 'Method', accessorKey: 'method', cell: ({ getValue }) => <MethodBadge method={getValue()} /> },
@@ -91,7 +84,7 @@ export default function ApiLogs() {
         </div>
         <div className="flex-shrink-0 flex items-center gap-6 w-full md:w-auto">
           <div className="flex-1 text-left md:text-right">
-            <p className="text-sm text-nowrap font-semibold text-muted-foreground uppercase tracking-wider">Total Requests</p>
+            <p className="text-sm font-nowrap font-semibold text-muted-foreground uppercase tracking-wider">Total Requests</p>
             <p className="text-2xl font-bold text-accent">{logs.length.toLocaleString()}</p>
           </div>
           <div className="flex-1 text-left md:text-right">
@@ -103,7 +96,7 @@ export default function ApiLogs() {
       
       <DataTable
         columns={columns}
-        data={logs}
+        data={sortedLogs}
         isLoading={loading}
         error={error}
         icon={Database}

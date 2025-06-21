@@ -33,8 +33,6 @@ export default function SubscriptionHistory() {
       }
       try {
         const response = await apiRequest('get', '/user/profile', null, token);
-        console.log(response);
-        
         setProfile(response.data.profile);
       } catch (err) {
         const errorMessage = err.response?.data?.message || 'Failed to fetch profile data.';
@@ -46,6 +44,13 @@ export default function SubscriptionHistory() {
     };
     fetchProfile();
   }, [token]);
+
+  const sortedSubscriptions = useMemo(() => {
+    if (!profile?.subscription) {
+      return [];
+    }
+    return [...profile.subscription].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [profile]);
 
   const columns = useMemo(() => [
     { header: 'Transaction ID', accessorKey: 'id', cell: ({ row }) => row.original.payload?.invoice || `INV-${row.original.id}` },
@@ -82,7 +87,7 @@ export default function SubscriptionHistory() {
       
       <DataTable
         columns={columns}
-        data={profile?.subscription || []}
+        data={sortedSubscriptions}
         isLoading={loading}
         error={error}
         icon={Database}
