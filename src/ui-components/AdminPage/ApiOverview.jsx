@@ -46,7 +46,6 @@ import {
   setLogsSuccess,
   setLogsError,
 } from "../../auth/logsSlice";
-import apiRequest from "../../utils/apiRequest";
 import { apiData, collections, packages } from "../../utils/data";
 import DashboardLoader from "./DashboardLoader";
 
@@ -256,7 +255,7 @@ const LatencyDistributionChart = ({ data }) => (
       Latency Distribution
     </h2>
     <div className="h-64 w-full">
-      {!data || data.every(d => d.requests === 0) ? (
+      {!data || data.every((d) => d.requests === 0) ? (
         <EmptyChartState />
       ) : (
         <ResponsiveContainer width="100%" height="100%">
@@ -588,15 +587,22 @@ export default function ApiAnalytics() {
       if (!token || !userHash) return;
       dispatch(setLogsLoading());
       try {
-        const response = await apiRequest("get", "/api/user/fetch-logs", null, token, {
-          "x-auth-token": userHash,
+        const response = await fetch("https://salesdriver.co:8089/api/user/fetch-logs", {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'x-auth-token': userHash
+          }
         });
-        dispatch(setLogsSuccess(response.data.logs || []));
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred' }));
+          throw new Error(errorData.message || 'Failed to fetch logs');
+        }
+        const data = await response.json();
+        dispatch(setLogsSuccess(data.logs || []));
       } catch (error) {
-        const errorMessage =
-          error.response?.data?.message || "Failed to fetch logs";
-        dispatch(setLogsError(errorMessage));
-        toast.error(errorMessage);
+        dispatch(setLogsError(error.message));
+        toast.error(error.message);
       }
     };
     fetchLogs();

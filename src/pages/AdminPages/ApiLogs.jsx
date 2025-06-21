@@ -41,8 +41,18 @@ export default function ApiLogs() {
         setLoading(false);
         return;
       }
-      try {
-        const response = await apiRequest('get', 'https://salesdriver.co:8089/api/user/fetch-logs', null, token, { 'x-auth-token': userHash });
+       try {
+        const response = await fetch("https://salesdriver.co:8089/api/user/fetch-logs", {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'x-auth-token': userHash
+          }
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'An unknown error occurred' }));
+          throw new Error(errorData.message || 'Failed to fetch logs');
+        }
         setLogs(response.data.logs || []);
       } catch (err) {
         const errorMessage = err.response?.data?.message || 'Failed to fetch API logs.';
