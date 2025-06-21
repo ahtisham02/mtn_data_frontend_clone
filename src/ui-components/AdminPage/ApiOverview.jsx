@@ -528,9 +528,9 @@ export default function ApiAnalytics() {
 
   const planToStripeCheckoutLinkUrl = useMemo(
     () => ({
-      plan_pro: "https://buy.stripe.com/test_00w14n1CKaExcrrapJbfO01",
-      plan_growth: "https://buy.stripe.com/test_8x27sL818cMFfDD1TdbfO02",
-      plan_ultra: "https://buy.stripe.com/test_bJe00j6X45kd2QRapJbfO03",
+      plan_pro: "https://buy.stripe.com/test_9B6cN50yGfYRbnneFZbfO04",
+      plan_growth: "https://buy.stripe.com/test_aFa9AT5T06ohfDDdBVbfO05",
+      plan_ultra: "https://buy.stripe.com/test_eVq3cv2GO2819ff8hBbfO06",
     }),
     []
   );
