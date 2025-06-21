@@ -420,7 +420,8 @@ export default function EndpointPage({ endpoint }) {
   const [activeRequestTab, setActiveRequestTab] = useState("Params");
   const requestTabs = ["Parameters", `Headers`, "Authorization", "Body"];
   
-  const Hash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash);  
+  const Hash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash); 
+  const token = useSelector((state) => state.auth.userToken);
 
   useEffect(() => {
     if (endpoint) {
@@ -446,6 +447,10 @@ export default function EndpointPage({ endpoint }) {
 
     if (Hash) {
       headers['x-auth-token'] = Hash;
+    }
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     let urlTemplate = endpoint.url;

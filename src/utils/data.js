@@ -1,21 +1,22 @@
-import { Gift, Zap, TrendingUp, Rocket } from "lucide-react";
+import { Building2, Zap, TrendingUp, Rocket } from "lucide-react";
 
 export const packages = [
-  {
-    id: "plan_free",
-    name: "Basic",
-    price: 0,
-    icon: Gift,
-    details: ["100 Credits"],
+    {
+    id: "plan_enterprise",
+    name: "Enterprise",
+    price: "Custom",
+    icon: Building2,
+    details: ["Custom Volume & Support"],
     features: [
-      { text: "LinkedIn Profile Data", included: true },
-      { text: "LinkedIn Jobs Data", included: true },
-      { text: "LinkedIn Company Data", included: true },
-      { text: "Bulk Processing", included: false },
-      { text: "Premium Company Insights", included: false },
-      { text: "Sales Navigator Search", included: false },
+      { text: "Unlimited API access", included: true },
+      { text: "Access to all AI tools", included: true },
+      {
+        text: "Full suite of professional, job, and org endpoints",
+        included: true,
+      },
+      { text: "Bulk & high-throughput capabilities", included: true },
+      { text: "Developer support via chat & email", included: true },
     ],
-    rateLimit: "Rate Limit: 1000 requests/hour",
   },
   {
     id: "plan_pro",
@@ -60,18 +61,6 @@ export const packages = [
       { text: "Priority Support", included: true },
     ],
     rateLimit: "Rate Limit: 50 requests/minute",
-  },
-  {
-    id: "plan_mega",
-    name: "Custom / Enterprise",
-    price: "Custom",
-    description:
-      "Need a tailor-made solution? Let's build a plan that fits your unique scale, support, and data requirements.",
-    features: [
-      { text: "Custom Credit Volume" },
-      { text: "Dedicated Onboarding" },
-      { text: "Custom Rate Limits & SLAs" },
-    ],
   },
 ];
 

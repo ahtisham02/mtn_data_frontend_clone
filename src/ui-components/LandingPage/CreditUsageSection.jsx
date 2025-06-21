@@ -18,20 +18,18 @@ const staggerContainer = {
   },
 };
 
-// Renamed and rephrased the data items
 const pricingTiers = [
   {
-    title: "Core Data Access",
+    title: "Basic Data Record",
     cost: "1 token",
   },
   {
-    title: "Enhanced Data Points",
-    cost: "0.5 tokens per field",
-    description: "Append extra info like skills, certifications, etc.", // This description is for context, not used in the UI
+    title: "Add-ons (skills, bios, posts)",
+    cost: "+0.5 tokens per field",
   },
   {
-    title: "Intelligent API Calls",
-    cost: "Varies by feature",
+    title: "AI Features",
+    cost: "Varies by tool",
   },
 ];
 

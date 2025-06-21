@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import {
   User,
   Mail,
@@ -11,6 +13,10 @@ import {
   MapPin,
   FileText,
   KeyRound,
+  CheckCircle2,
+  XCircle,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { updateUserProfile } from "../../auth/authSlice";
 import apiRequest from "../../utils/apiRequest";
@@ -21,11 +27,103 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
+const passwordSchema = Yup.object().shape({
+  oldPassword: Yup.string().required("Current password is required"),
+  newPassword: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[a-z]/, "Password must contain a lowercase letter")
+    .matches(/[A-Z]/, "Password must contain an uppercase letter")
+    .matches(/[0-9]/, "Password must contain a number")
+    .required("New password is required"),
+  confirmNewPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
+    .required("Confirming your new password is required"),
+});
+
+const ValidationItem = ({ isValid, text }) => (
+  <div
+    className={`flex items-center gap-2 text-sm transition-colors ${
+      isValid ? "text-green-600" : "text-slate-500"
+    }`}
+  >
+    {isValid ? (
+      <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+    ) : (
+      <XCircle className="w-4 h-4 flex-shrink-0" />
+    )}
+    <span>{text}</span>
+  </div>
+);
+
+const ProfileInput = ({ id, label, icon, ...props }) => (
+  <div>
+    <label
+      htmlFor={id}
+      className="block mb-1 text-sm font-medium text-slate-700"
+    >
+      {label}
+    </label>
+    <div className="relative">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400">
+        {icon}
+      </div>
+      <input
+        id={id}
+        name={id}
+        {...props}
+        className="w-full py-2 pl-10 pr-4 border border-slate-300 rounded-md bg-slate-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#F43F5E] focus:border-[#F43F5E] disabled:bg-slate-200 disabled:cursor-not-allowed"
+      />
+    </div>
+  </div>
+);
+
+const PasswordInput = ({ name, label, error, touched }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <div>
+      <label
+        htmlFor={name}
+        className="block mb-1 text-sm font-medium text-slate-700"
+      >
+        {label}
+      </label>
+      <div className="relative">
+        <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <Field
+          type={showPassword ? "text" : "password"}
+          id={name}
+          name={name}
+          className={`w-full py-2 pl-10 pr-10 border rounded-md bg-slate-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#F43F5E] focus:border-[#F43F5E] ${
+            error && touched ? "border-red-500" : "border-slate-300"
+          }`}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          {showPassword ? (
+            <EyeOff className="w-5 h-5" />
+          ) : (
+            <Eye className="w-5 h-5" />
+          )}
+        </button>
+      </div>
+      <ErrorMessage
+        name={name}
+        component="p"
+        className="mt-1 text-xs text-red-600"
+      />
+    </div>
+  );
+};
+
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.auth.userInfo);
-  const state = useSelector((state) => state);
-  console.log(state);
+  const token = useSelector((state) => state.auth.userToken);
 
   const [userData, setUserData] = useState({});
   const [originalUserData, setOriginalUserData] = useState({});
@@ -37,7 +135,7 @@ const ProfilePage = () => {
       const initialData = {
         name: profile.name || "",
         email: profile.email || "",
-        jobTitle: profile.jobTitle || "",
+        jobtitle: profile.jobtitle || "",
         location: profile.location || "",
         userBio: profile.userBio || "",
       };
@@ -66,15 +164,12 @@ const ProfilePage = () => {
     setIsSaving(true);
     const payload = {
       name: userData.name,
-      jobTitle: userData.jobTitle,
+      jobtitle: userData.jobtitle,
       location: userData.location,
       userBio: userData.userBio,
     };
     try {
-      const response = await apiRequest("PUT", "/user/profile", payload, null, {
-        "x-auth-token":
-          "f13f0d5186dfe0cbff990639b640662768bb0ebcc64a08fabc752427d5ad62b8",
-      });
+      const response = await apiRequest("PUT", "/user/profile", payload, token);
       dispatch(updateUserProfile(response.data.profile));
       toast.success("Profile updated successfully!");
       setIsEditing(false);
@@ -87,14 +182,22 @@ const ProfilePage = () => {
     }
   };
 
-  const handlePasswordResetInfo = () => {
-    toast(
-      'To reset your password, please log out and use the "Forgot Password" link on the login page.',
-      {
-        icon: "ℹ️",
-        duration: 5000,
-      }
-    );
+  const handlePasswordSave = async (values, { setSubmitting, resetForm }) => {
+    const payload = {
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    };
+    try {
+      await apiRequest("PUT", "/user/update-password", payload, token);
+      toast.success("Password updated successfully!");
+      resetForm();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to update password.";
+      toast.error(errorMessage);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -106,38 +209,38 @@ const ProfilePage = () => {
     >
       <motion.header variants={itemVariants} className="max-w-5xl mx-auto mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Account Settings</h1>
-        <p className="mt-1 text-slate-500">
-          Manage your profile information and password.
+        <p className="mt-2 text-slate-500">
+          Update your personal details and manage your account security.
         </p>
       </motion.header>
 
       <div className="grid max-w-5xl grid-cols-1 gap-8 mx-auto lg:grid-cols-3">
         <motion.div variants={itemVariants} className="lg:col-span-1">
           <div className="p-6 text-center bg-white border border-slate-200 rounded-xl shadow-sm">
-            <div className="flex items-center justify-center w-32 h-32 mx-auto bg-[#F43F5E]/10 rounded-full ring-4 ring-[#F43F5E]/30">
+            <div className="relative flex items-center justify-center w-32 h-32 mx-auto bg-[#F43F5E]/10 rounded-full ring-4 ring-white/80">
               <User className="w-16 h-16 text-[#F43F5E]" />
             </div>
             <h2 className="mt-4 text-xl font-bold text-slate-900">
               {userData.name}
             </h2>
             <p className="text-sm text-slate-500">{userData.email}</p>
-            <div className="mt-4 pt-4 border-t border-slate-200 text-left space-y-2 text-sm">
-              {userData.jobTitle && (
-                <div className="flex items-center gap-2 text-slate-600">
+            <div className="mt-4 pt-4 border-t border-slate-200 text-left space-y-3 text-sm">
+              {userData.jobtitle && (
+                <div className="flex items-center gap-3 text-slate-600">
                   <Briefcase className="w-4 h-4 text-[#F43F5E]" />
-                  <span>{userData.jobTitle}</span>
+                  <span>{userData.jobtitle}</span>
                 </div>
               )}
               {userData.location && (
-                <div className="flex items-center gap-2 text-slate-600">
+                <div className="flex items-center gap-3 text-slate-600">
                   <MapPin className="w-4 h-4 text-[#F43F5E]" />
                   <span>{userData.location}</span>
                 </div>
               )}
               {userData.userBio && (
-                <div className="flex items-start gap-2 text-slate-600">
+                <div className="flex items-start gap-3 text-slate-600">
                   <FileText className="w-4 h-4 mt-0.5 text-[#F43F5E] flex-shrink-0" />
-                  <span>{userData.userBio}</span>
+                  <span className="leading-relaxed">{userData.userBio}</span>
                 </div>
               )}
             </div>
@@ -147,7 +250,7 @@ const ProfilePage = () => {
         <motion.div variants={itemVariants} className="space-y-8 lg:col-span-2">
           <form
             onSubmit={handleProfileSave}
-            className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm"
+            className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm transition-all duration-300 hover:shadow-lg"
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold text-slate-900">
@@ -165,9 +268,11 @@ const ProfilePage = () => {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white bg-[#F43F5E] rounded-md hover:bg-[#E11D48] transition-colors disabled:opacity-70"
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white bg-[#F43F5E] rounded-md hover:bg-[#E11D48] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    <Save className="w-4 h-4" />{" "}
+                    <Save
+                      className={`w-4 h-4 ${isSaving ? "animate-spin" : ""}`}
+                    />
                     {isSaving ? "Saving..." : "Save"}
                   </button>
                 </div>
@@ -181,88 +286,40 @@ const ProfilePage = () => {
                 </button>
               )}
             </div>
-
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block mb-1 text-sm font-medium text-slate-700"
-                  >
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={userData.name || ""}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="w-full py-2 pl-10 pr-4 border border-slate-300 rounded-md bg-slate-50 disabled:bg-slate-200 disabled:cursor-not-allowed focus:ring-2 focus:ring-[#F43F5E] focus:border-[#F43F5E]"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block mb-1 text-sm font-medium text-slate-700"
-                  >
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={userData.email || ""}
-                      disabled
-                      className="w-full py-2 pl-10 pr-4 border border-slate-300 rounded-md bg-slate-200 cursor-not-allowed"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="jobTitle"
-                    className="block mb-1 text-sm font-medium text-slate-700"
-                  >
-                    Job Title
-                  </label>
-                  <div className="relative">
-                    <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="text"
-                      id="jobTitle"
-                      name="jobTitle"
-                      value={userData.jobTitle || ""}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="w-full py-2 pl-10 pr-4 border border-slate-300 rounded-md bg-slate-50 disabled:bg-slate-200 disabled:cursor-not-allowed focus:ring-2 focus:ring-[#F43F5E] focus:border-[#F43F5E]"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="location"
-                    className="block mb-1 text-sm font-medium text-slate-700"
-                  >
-                    Location
-                  </label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="text"
-                      id="location"
-                      name="location"
-                      value={userData.location || ""}
-                      onChange={handleInputChange}
-                      disabled={!isEditing}
-                      className="w-full py-2 pl-10 pr-4 border border-slate-300 rounded-md bg-slate-50 disabled:bg-slate-200 disabled:cursor-not-allowed focus:ring-2 focus:ring-[#F43F5E] focus:border-[#F43F5E]"
-                    />
-                  </div>
-                </div>
+                <ProfileInput
+                  id="name"
+                  label="Full Name"
+                  icon={<User />}
+                  value={userData.name || ""}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+                <ProfileInput
+                  id="email"
+                  label="Email Address"
+                  type="email"
+                  icon={<Mail />}
+                  value={userData.email || ""}
+                  disabled
+                />
+                <ProfileInput
+                  id="jobtitle"
+                  label="Job Title"
+                  icon={<Briefcase />}
+                  value={userData.jobtitle || ""}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+                <ProfileInput
+                  id="location"
+                  label="Location"
+                  icon={<MapPin />}
+                  value={userData.location || ""}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
               </div>
               <div>
                 <label
@@ -280,29 +337,76 @@ const ProfilePage = () => {
                     value={userData.userBio || ""}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full py-2 pl-10 pr-4 border border-slate-300 rounded-md bg-slate-50 disabled:bg-slate-200 disabled:cursor-not-allowed focus:ring-2 focus:ring-[#F43F5E] focus:border-[#F43F5E]"
+                    className="w-full py-2 pl-10 pr-4 border border-slate-300 rounded-md bg-slate-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#F43F5E] focus:border-[#F43F5E] disabled:bg-slate-200 disabled:cursor-not-allowed"
                   ></textarea>
                 </div>
               </div>
             </div>
           </form>
 
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="text-lg font-bold text-slate-900 mb-2">
-              Change Password
-            </h3>
-            <p className="text-sm text-slate-500 mb-4">
-              To change your password, you must log out and use the "Forgot
-              Password" feature.
-            </p>
-            <button
-              onClick={handlePasswordResetInfo}
-              className="w-full px-4 py-2 font-semibold text-white bg-[#F43F5E] rounded-md hover:bg-[#E11D48] transition-colors flex items-center justify-center gap-2"
-            >
-              <KeyRound className="w-4 h-4" />
-              Reset Password
-            </button>
-          </div>
+          <Formik
+            initialValues={{
+              oldPassword: "",
+              newPassword: "",
+              confirmNewPassword: "",
+            }}
+            validationSchema={passwordSchema}
+            onSubmit={handlePasswordSave}
+          >
+            {({ isSubmitting, values, errors, touched }) => (
+              <Form className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm transition-all duration-300 hover:shadow-lg">
+                <h3 className="mb-6 text-lg font-bold text-slate-900">
+                  Change Password
+                </h3>
+                <div className="space-y-4">
+                  <PasswordInput
+                    name="oldPassword"
+                    label="Current Password"
+                    error={errors.oldPassword}
+                    touched={touched.oldPassword}
+                  />
+                  <div>
+                    <PasswordInput
+                      name="newPassword"
+                      label="New Password"
+                      error={errors.newPassword}
+                      touched={touched.newPassword}
+                    />
+                    <div className="!mt-2 space-y-1 pl-1">
+                      <ValidationItem
+                        isValid={/[A-Z]/.test(values.newPassword)}
+                        text="At least one uppercase letter"
+                      />
+                      <ValidationItem
+                        isValid={/[a-z]/.test(values.newPassword)}
+                        text="At least one lowercase letter"
+                      />
+                      <ValidationItem
+                        isValid={/[0-9]/.test(values.newPassword)}
+                        text="At least one number"
+                      />
+                    </div>
+                  </div>
+                  <PasswordInput
+                    name="confirmNewPassword"
+                    label="Confirm New Password"
+                    error={errors.confirmNewPassword}
+                    touched={touched.confirmNewPassword}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex items-center justify-center w-full gap-2 px-4 py-2 mt-6 font-semibold text-white bg-[#F43F5E] rounded-md hover:bg-[#E11D48] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  <Save
+                    className={`w-4 h-4 ${isSubmitting ? "animate-spin" : ""}`}
+                  />
+                  {isSubmitting ? "Saving..." : "Change Password"}
+                </button>
+              </Form>
+            )}
+          </Formik>
         </motion.div>
       </div>
     </motion.div>

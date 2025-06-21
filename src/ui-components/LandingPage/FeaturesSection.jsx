@@ -1,78 +1,51 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Library,
-  Users,
-  Search,
-  ListTodo,
-  MailCheck,
-  AtSign,
-  Activity,
-  Code,
-  Filter,
-  BookOpen,
+  Globe,
+  SlidersHorizontal,
+  UserCheck,
+  ClipboardList,
+  TrendingUp,
+  Database,
 } from "lucide-react";
+import { Link as ScrollLink } from "react-scroll";
 
 const features = [
   {
-    icon: Library,
-    title: "Access Company Data",
+    icon: Globe,
+    title: "Public Data Discovery",
     description:
-      "View detailed company profiles, including job listings, posts, employee size, and industry insights.",
+      "Discover people and organizations from a wide range of public sources.",
   },
   {
-    icon: Users,
-    title: "Find Key Decision-Makers",
+    icon: SlidersHorizontal,
+    title: "Granular Targeting & Filters",
     description:
-      "Instantly identify executives and top-level professionals within any organization.",
+      "Filter by title, seniority, geography, company size, and industry to find the perfect match.",
   },
   {
-    icon: Search,
-    title: "Smart Search & Filters",
+    icon: UserCheck,
+    title: "Profile & Email Matching",
     description:
-      "Use advanced filters to quickly find relevant people, companies, and content across platforms.",
+      "Confidently match email addresses to their corresponding public profiles.",
   },
   {
-    icon: ListTodo,
-    title: "Bulk Data Access",
+    icon: ClipboardList,
+    title: "Comprehensive Data Scraping",
     description:
-      "Fetch thousands of profiles, companies, jobs, or posts per minute with seamless bulk processing.",
+      "Scrape detailed information including bios, activity history, skills, and more.",
   },
   {
-    icon: MailCheck,
-    title: "Verified Email Discovery",
+    icon: TrendingUp,
+    title: "Real-Time Activity Tracking",
     description:
-      "Find verified email addresses of professionals and decision-makers using intelligent detection.",
+      "Track profile updates, posting patterns, and public role changes to stay informed.",
   },
   {
-    icon: AtSign,
-    title: "Email-to-Profile Match",
+    icon: Database,
+    title: "High-Volume Bulk Processing",
     description:
-      "Look up public profiles from email addresses for precise targeting and outreach.",
-  },
-  {
-    icon: Activity,
-    title: "Activity Tracking",
-    description:
-      "Monitor recent activity, interests, and engagement signals from profiles and posts.",
-  },
-  {
-    icon: Code,
-    title: "Content Scraping with Pagination",
-    description:
-      "Extract posts, comments, and reactions at scale with full pagination support.",
-  },
-  {
-    icon: Filter,
-    title: "Premium Insights & Filters",
-    description:
-      "Access enriched premium-level insights and fine-tuned filters to power your strategy.",
-  },
-  {
-    icon: BookOpen,
-    title: "Developer-Friendly Docs",
-    description:
-      "Easy-to-follow documentation for fast, smooth integration into your workflow.",
+      "Use pagination and dedicated bulk endpoints for high-volume, large-scale jobs.",
   },
 ];
 
@@ -90,9 +63,13 @@ const FeaturesSection = () => {
             What Can You Do with
             <span className="relative inline-block ml-3">
               <span className="absolute top-10 w-full h-3 bg-accent/20"></span>
-              <span className="relative">MTN Data ScrapeX API?</span>
+              <span className="relative">Our API?</span>
             </span>
           </h2>
+          <p className="mt-3 text-base font-medium text-gray-600 md:text-lg">
+            Skip the scraping. Integrate live role, company, and job data
+            directly into your stack.
+          </p>
         </div>
 
         <div className="relative mt-16 group overflow-hidden mask-gradient">
@@ -130,6 +107,25 @@ const FeaturesSection = () => {
               </div>
             </motion.div>
           </AnimatePresence>
+        </div>
+        <div className="flex justify-center mt-12">
+          <ScrollLink
+            to="booking"
+            spy={true}
+            smooth={true}
+            offset={-70}
+            duration={800}
+            className="cursor-pointer"
+          >
+            <button className="inline-flex flex-col items-center px-8 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
+              <span className="flex items-center text-lg">
+                Power Your Platform with Scalable, Enriched Data
+              </span>
+              <span className="text-xs font-normal tracking-wider uppercase">
+                Get API Access
+              </span>
+            </button>
+          </ScrollLink>
         </div>
       </div>
     </section>

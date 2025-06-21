@@ -55,9 +55,7 @@ const LoginPage = () => {
     }
     const { token } = loginResponseData;    
     
-  const profileResponse = await apiRequest("get", "/user/profile", null, null, {
-    'x-auth-token': 'f13f0d5186dfe0cbff990639b640662768bb0ebcc64a08fabc752427d5ad62b8',
-  });
+  const profileResponse = await apiRequest("get", "/user/profile", null, token);
 
     const userData = profileResponse.data;
 

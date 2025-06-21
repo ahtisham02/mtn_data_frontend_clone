@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 
 import img1 from "../../assets/img/1.png";
@@ -9,111 +10,59 @@ import img3 from "../../assets/img/3.png";
 import img4 from "../../assets/img/4.png";
 import img5 from "../../assets/img/5.png";
 import img6 from "../../assets/img/6.png";
-import img7 from "../../assets/img/7.png";
-import img8 from "../../assets/img/8.png";
-import img9 from "../../assets/img/9.png";
-import img10 from "../../assets/img/10.png";
-import img11 from "../../assets/img/11.png";
 
 const tools = [
   {
-    category: "Instant Support",
-    brand: "AI Suite",
-    title: "ChatBot",
+    category: "Conversational AI",
+    brand: "NexusQuery",
+    title: "AI Chat Assistant",
     description:
-      "Resolve any query about people or organizations through an AI-powered chat assistant.",
+      "Ask questions about any company, person, or industry and get structured results.",
     image: img1,
     accentClass: "bg-green-500",
   },
   {
-    category: "Smart Suggestions",
-    brand: "AI Suite",
+    category: "Data Enhancement",
+    brand: "DataRefine",
     title: "Profile Optimizer",
-    description:
-      "Analyze profile details and get AI-generated suggestions for better positioning and visibility.",
+    description: "Get AI suggestions to improve profile data structure.",
     image: img2,
     accentClass: "bg-teal-500",
   },
   {
-    category: "Efficient Reviews",
-    brand: "AI Suite",
-    title: "Magic Pen",
-    description:
-      "Gain insights on strengths and areas for improvement across profiles and companies.",
+    category: "Automated Writing",
+    brand: "AutoScribe",
+    title: "Magic Pen Generator",
+    description: "Auto-write summaries, bios, or outreach blurbs.",
     image: img3,
     accentClass: "bg-cyan-500",
   },
   {
-    category: "AI Recommendations",
-    brand: "AI Suite",
-    title: "Automated Enhancer",
+    category: "Data Intelligence",
+    brand: "ClarityEngine",
+    title: "Insight Engine",
     description:
-      "Generate actionable, AI-driven improvement tips for personal or company profiles.",
+      "Surface hidden insights from public activity, trends, and intent signals.",
     image: img4,
     accentClass: "bg-sky-500",
   },
   {
-    category: "AI Insights",
-    brand: "AI Suite",
-    title: "Insight Generator",
+    category: "Market Analysis",
+    brand: "StratoScope",
+    title: "Market Explorer",
     description:
-      "Receive data-backed insights tailored to individual or organizational profiles.",
+      "Visualize hiring trends, industry shifts, and team expansions.",
     image: img5,
     accentClass: "bg-indigo-500",
   },
   {
-    category: "Career Enhancement",
-    brand: "AI Suite",
-    title: "Career Predictor",
+    category: "Automated Outreach",
+    brand: "EngageBot",
+    title: "Message Composer",
     description:
-      "Forecast career growth paths and opportunities using AI-based profile analysis.",
+      "Auto-generate cold emails or intro messages from scraped data.",
     image: img6,
     accentClass: "bg-purple-500",
-  },
-  {
-    category: "Industry Trends",
-    brand: "AI Suite",
-    title: "Market Trend Explorer",
-    description:
-      "Discover job market and industry trends to support recruitment and strategic decisions.",
-    image: img7,
-    accentClass: "bg-pink-500",
-  },
-  {
-    category: "Automated Copywriting",
-    brand: "AI Suite",
-    title: "Message & Email Crafter",
-    description:
-      "Compose personalized messages and emails to engage prospects or stakeholders effectively.",
-    image: img8,
-    accentClass: "bg-rose-500",
-  },
-  {
-    category: "Profile Benchmarking",
-    brand: "AI Suite",
-    title: "Profile Qualifier",
-    description:
-      "Benchmark profiles against industry standards or lead requirements to identify gaps.",
-    image: img9,
-    accentClass: "bg-orange-500",
-  },
-  {
-    category: "Smart Comparisons",
-    brand: "AI Suite",
-    title: "Benchmarking Tool",
-    description:
-      "Evaluate profiles against key benchmarks and performance indicators for optimization.",
-    image: img10,
-    accentClass: "bg-amber-500",
-  },
-  {
-    category: "Competitive Edge",
-    brand: "AI Suite",
-    title: "Competitor Analyzer",
-    description:
-      "Compare any profile with competitors to discover strengths and improvement areas using AI.",
-    image: img11,
-    accentClass: "bg-lime-500",
   },
 ];
 
@@ -148,11 +97,14 @@ const ToolCard = ({ tool }) => (
 );
 
 const AiToolsSection = () => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "start",
-    slidesToScroll: 1,
-  });
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: true,
+      align: "start",
+      slidesToScroll: 1,
+    },
+    [Autoplay({ delay: 5000, stopOnInteraction: false })]
+  );
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState([]);
 
@@ -189,12 +141,16 @@ const AiToolsSection = () => {
             AI TOOLS FOR DATA INSIGHTS
           </p>
           <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
-            AI-Powered Endpoints for
+            AI Tools for
             <span className="relative inline-block ml-3">
               <span className="absolute top-10 w-full h-3 bg-accent/20"></span>
-              <span className="relative">Smarter Decisions</span>
+              <span className="relative">Smarter Automation</span>
             </span>
           </h2>
+          <p className="mt-3 text-base font-medium text-gray-600 md:text-lg">
+            Enhance every data call with precision AI tools—built to accelerate
+            your workflows.
+          </p>
         </div>
 
         <div className="relative mt-16">
@@ -242,9 +198,11 @@ const AiToolsSection = () => {
             className="cursor-pointer"
           >
             <button className="inline-flex flex-col items-center px-8 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
-              <span className="flex items-center text-lg">GET TOOLS</span>
+              <span className="flex items-center text-lg">
+                Integrate AI-Powered Enrichment in Minutes
+              </span>
               <span className="text-xs font-normal tracking-wider uppercase">
-                Schedule a Free Consultation
+                Try AI Tools Now
               </span>
             </button>
           </ScrollLink>

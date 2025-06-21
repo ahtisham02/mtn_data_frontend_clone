@@ -11,9 +11,6 @@ const itemVariants = {
 };
 
 export default function VerifyEmailPage() {
-  useEffect(() => {
-    toast.success("Email verified successfully! You can now log in.");
-  }, []);
 
   return (
     <AuthLayout

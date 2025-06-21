@@ -5,16 +5,16 @@ import { Link as ScrollLink } from "react-scroll";
 
 const inquiryData = [
   {
-    question: 'How up-to-date is the information?',
-    answer: 'Our data is sourced live and on-demand. We do not rely on caches, which means every request you make pulls the most current information available directly from the source.'
+    question: 'Do you store any data?',
+    answer: 'No. Every request is live, and we never retain or cache personal data.'
   },
   {
-    question: 'What are your privacy & security measures?',
-    answer: 'We prioritize your security above all else. Our platform is built with industry-leading security protocols and is fully GDPR compliant. We never store end-user personal data on our servers.'
+    question: 'Can you support high-volume use cases?',
+    answer: 'Yes. We support pagination, rate limits, and async queries.'
   },
   {
-    question: 'Are there options for custom solutions?',
-    answer: 'Yes, we excel at creating tailored solutions. We recognize that one size doesn\'t fit all, and we are happy to discuss custom plans and integrations to meet your project\'s unique demands.'
+    question: 'Do you offer custom endpoints?',
+    answer: 'Yes—contact us to scope your use case.'
   }
 ];
 

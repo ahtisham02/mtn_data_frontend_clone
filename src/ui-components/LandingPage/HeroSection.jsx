@@ -27,17 +27,16 @@ const HeroSection = () => {
           initial="hidden"
           animate="visible"
         >
-          {/* Left Column: Text Content */}
           <div className="flex flex-col justify-center text-center lg:text-left">
             <motion.h1
               variants={fadeInUp}
               className="text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl"
             >
-              Fuel Your{" "}
-              <span className="text-accent">Pipeline</span> with Real-Time
+              Real-Time <span className="text-accent">Professional</span> &
+              Company Data,
               <span className="relative inline-block">
                 <span className="absolute top-12 w-full h-3 bg-accent/20"></span>
-                <span className="relative">B2B Intelligence</span>
+                <span className="relative">Delivered via API</span>
               </span>
             </motion.h1>
 
@@ -45,7 +44,8 @@ const HeroSection = () => {
               variants={fadeInUp}
               className="mt-6 text-lg text-muted md:text-xl"
             >
-              Mtn gives you the most robust European mobile phone numbers and B2B emails of people you want to do business with.
+              Power your stack with live data feeds, AI-enhanced enrichment, and
+              zero data retention risk.{" "}
             </motion.p>
 
             <motion.div variants={fadeInUp} className="mt-10">
@@ -59,7 +59,7 @@ const HeroSection = () => {
               >
                 <button className="inline-flex flex-col items-center px-8 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
                   <span className="flex items-center text-lg">
-                    GET STARTED
+                    Start Building Smarter
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </span>
                   <span className="text-xs font-normal tracking-wider uppercase">
@@ -70,7 +70,6 @@ const HeroSection = () => {
             </motion.div>
           </div>
 
-          {/* Right Column: SIMPLIFIED Video Player */}
           <motion.div variants={fadeInUp} className="w-full max-w-lg mx-auto">
             <div className="flex items-center justify-center gap-2 p-3 font-bold text-white rounded-t-lg bg-accent">
               <Volume2 size={20} />

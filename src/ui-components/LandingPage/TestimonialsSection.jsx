@@ -5,21 +5,21 @@ import { Quote } from "lucide-react";
 const testimonials = [
   {
     quote:
-      "MTN Data ScrapeX API has revolutionized how we access LinkedIn data. The real-time information and AI-powered insights are unparalleled.",
+      "We integrated in hours—not days. Clean output, instant results.",
     name: "Alex J.",
     title: "CTO | Tech Innovators Inc.",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg", // Reliable dummy
   },
   {
     quote:
-      "The custom solutions offered by MTN Data ScrapeX perfectly fit our enterprise needs. Highly recommended!",
+      "Exactly what we needed for our outbound enrichment workflows.",
     name: "Maria G.",
     title: "Lead Developer | Global Solutions Ltd.",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg", // Reliable dummy
   },
   {
     quote:
-      "Incredible speed and accuracy. The API documentation is clean and made our integration process a breeze.",
+      "Fast, well-documented, and built for scale.",
     name: "David Chen",
     title: "Senior Engineer | DataDriven Co.",
     avatar: "https://randomuser.me/api/portraits/men/85.jpg", // Reliable dummy
@@ -79,12 +79,18 @@ const TestimonialsSection = () => {
             What Our Clients Say
           </p>
           <h2 className="mt-2 text-4xl font-bold text-gray-100 md:text-5xl">
-            <span className="relative inline-block ml-2">
+            Built for
+            <span className="relative inline-block mx-2">
               <span className="absolute bottom-0 w-full h-2 bg-accent/30"></span>
-              <span className="relative">Testimonials</span>
+              <span className="relative">Tech Teams</span>
             </span>
+            Like Yours
             <br />
           </h2>
+          <p className="max-w-2xl mx-auto mt-4 text-lg text-gray-200">
+            We work with startups, growth-stage SaaS platforms, AI devs, and
+            enterprise teams.{" "}
+          </p>
         </motion.div>
 
         <motion.div

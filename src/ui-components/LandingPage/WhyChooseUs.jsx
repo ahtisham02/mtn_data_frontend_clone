@@ -29,34 +29,30 @@ const features = [
     icon: Database,
     title: "Live Data Access",
     description:
-      "Get 100% real-time data from trusted sources—never cached, always current.",
+      "Every call returns real-time data pulled on demand. Never cached.",
   },
   {
     icon: Blocks,
-    title: "AI-Powered Insights",
-    description:
-      "Use advanced AI to extract smarter insights and streamline your workflows.",
+    title: "AI-Driven Insight Extraction",
+    description: "Turn raw records into structured, decision-ready outputs.",
   },
   {
     icon: ShieldCheck,
-    title: "Privacy First",
+    title: "No Data Retention",
     description:
-      "Fully GDPR-compliant with zero data storage—your privacy is our priority.",
+      "Your queries are processed live. Nothing stored, nothing saved.",
   },
   {
     icon: TrendingUp,
-    title: "Always On",
-    description:
-      "Count on 100% uptime for uninterrupted data access, anytime, anywhere.",
+    title: "Enterprise-Grade Uptime",
+    description: "99.99% availability across globally distributed systems.",
   },
   {
     icon: Zap,
-    title: "Ultra-Fast Response",
-    description:
-      "Global latency under 1000ms ensures smooth and efficient performance.",
+    title: "Sub-Second Latency",
+    description: "Stay fast and reactive with API calls under 1,000ms.",
   },
 ];
-
 
 const FeatureCard = ({ icon: Icon, title, description }) => (
   <motion.div
@@ -93,8 +89,12 @@ const WhyChooseUs = () => {
                 <span className="relative">Choose</span>
               </span>
               <br />
-              MTN AI Data API?
+              MTN Data ScrapeX?
             </h2>
+            <p className="mt-2 text-base font-medium text-gray-600 md:text-lg">
+              Built for developers. Trusted by technical teams. Designed to
+              scale with your product.
+            </p>
           </motion.div>
 
           <motion.div
@@ -118,7 +118,7 @@ const WhyChooseUs = () => {
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold">Ready to Start?</h3>
                 <p className="mt-2 text-slate-300">
-                  Let's build something great together.
+                  Deploy Reliable Data Infrastructure Today
                 </p>
                 <ScrollLink
                   to="booking"
@@ -129,7 +129,7 @@ const WhyChooseUs = () => {
                   className="cursor-pointer"
                 >
                   <button className="flex items-center justify-center w-full gap-2 px-6 py-3 mt-6 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-accent hover:bg-accent-hover hover:shadow-xl">
-                    Work With Us
+                    Request a Demo
                     <ArrowRight size={18} />
                   </button>
                 </ScrollLink>

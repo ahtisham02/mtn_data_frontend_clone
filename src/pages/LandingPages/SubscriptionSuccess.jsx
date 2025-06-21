@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { Loader, CheckCircle, XCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import apiRequest from "../../utils/apiRequest";
+import { useSelector } from "react-redux";
 
 export default function SubscriptionSuccess() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,6 +12,8 @@ export default function SubscriptionSuccess() {
   const [subscriptionDetails, setSubscriptionDetails] = useState(null);
   const [processed, setProcessed] = useState(false);
   const VITE_STRIPE_SECRET_KEY = import.meta.env.VITE_STRIPE_SECRET_KEY;
+  const token = useSelector((state) => state.auth.userToken);
+  const Hash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash);  
 
   useEffect(() => {
     if (processed) return; // Skip if already processed
@@ -44,9 +47,9 @@ export default function SubscriptionSuccess() {
             price: stripeData.amount_total / 100,
             payload: stripeData
           },
-          null,
+         token,
           {
-            "x-auth-token": "f13f0d5186dfe0cbff990639b640662768bb0ebcc64a08fabc752427d5ad62b8",
+            "x-auth-token": Hash,
           }
         );
 

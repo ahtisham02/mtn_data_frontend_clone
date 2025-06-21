@@ -39,6 +39,8 @@ import {
   XCircle,
   ArrowRight,
   Building2,
+  TrendingUp,
+  Rocket,
 } from "lucide-react";
 import { apiData, collections, packages } from "../../utils/data";
 
@@ -432,8 +434,7 @@ const CollectionRow = ({ collection }) => {
 
 const PackageCard = ({ pkg, onCtaClick, isLoading, isCurrentPlan }) => {
   const IconComponent = pkg.icon;
-  const isFreePlan = pkg.price === 0;
-
+  const isCustomPlan = pkg.price === "Custom";
   return (
     <div
       className={`flex flex-col h-full p-6 transition-all duration-300 bg-white border rounded-2xl ${
@@ -447,18 +448,8 @@ const PackageCard = ({ pkg, onCtaClick, isLoading, isCurrentPlan }) => {
           Current Plan
         </div>
       )}
-      <div
-        className={`w-14 h-14 rounded-full flex items-center justify-center mb-6 ${
-          isFreePlan ? "bg-gray-100" : "bg-accent/10"
-        }`}
-      >
-        {IconComponent && (
-          <IconComponent
-            className={`w-7 h-7 ${
-              isFreePlan ? "text-muted-foreground" : "text-accent"
-            }`}
-          />
-        )}
+      <div className="flex items-center justify-center w-14 h-14 mb-6 rounded-full bg-accent/10">
+        {IconComponent && <IconComponent className="w-7 h-7 text-accent" />}
       </div>
       <h3 className="text-2xl font-bold text-foreground">{pkg.name}</h3>
       <div className="flex items-end mt-4">
@@ -475,7 +466,7 @@ const PackageCard = ({ pkg, onCtaClick, isLoading, isCurrentPlan }) => {
           </span>
         )}
       </div>
-      <div className="mt-4 space-y-1 text-sm text-muted font-semibold">
+      <div className="mt-4 space-y-1 text-sm font-semibold text-muted">
         {pkg.details.map((detail) => (
           <p key={detail}>{detail}</p>
         ))}
@@ -509,18 +500,18 @@ const PackageCard = ({ pkg, onCtaClick, isLoading, isCurrentPlan }) => {
         <div className="mt-auto pt-8">
           <button
             onClick={onCtaClick}
-            disabled={isCurrentPlan || isLoading}
-            className={`flex items-center justify-center w-full px-4 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg ${
-              isCurrentPlan
-                ? "bg-muted cursor-not-allowed"
-                : "bg-accent hover:bg-accent-hover hover:shadow-xl"
-            }`}
+            disabled={isLoading}
+            className={`flex items-center justify-center w-full px-4 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-accent hover:bg-accent-hover hover:shadow-xl`}
           >
-            {isLoading
-              ? "Processing..."
-              : isCurrentPlan
-              ? "Your Plan"
-              : "Upgrade Plan"}
+            {isCustomPlan ? (
+              <>
+                Contact Sales <ArrowRight size={18} className="ml-2" />
+              </>
+            ) : isLoading ? (
+              "Processing..."
+            ) : (
+              "Upgrade Plan"
+            )}
           </button>
         </div>
       </div>
@@ -532,11 +523,8 @@ export default function ApiAnalytics() {
   const [loadingPlanId, setLoadingPlanId] = useState(null);
   const [apiStatus] = useState(true);
   const [timeRange, setTimeRange] = useState("7d");
-  const [currentPlanId] = useState("plan_free");
+  const [currentPlanId] = useState("plan_pro");
   const navigate = useNavigate();
-
-  const standardPackages = packages.filter((p) => p.price !== "Custom");
-  const customPackage = packages.find((p) => p.price === "Custom");
 
   const planToStripeCheckoutLinkUrl = useMemo(
     () => ({
@@ -736,48 +724,20 @@ export default function ApiAnalytics() {
               Billing & Plans
             </h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {standardPackages.map((pkg) => (
+              {packages.map((pkg) => (
                 <PackageCard
                   key={pkg.id}
                   pkg={pkg}
-                  onCtaClick={() => handlePlanSelect(pkg.id)}
+                  onCtaClick={() =>
+                    pkg.price === "Custom"
+                      ? handleContactClick()
+                      : handlePlanSelect(pkg.id)
+                  }
                   isLoading={loadingPlanId === pkg.id}
                   isCurrentPlan={currentPlanId === pkg.id}
                 />
               ))}
             </div>
-            {customPackage && (
-              <div className="relative p-8 mt-8 overflow-hidden text-white transition-all duration-300 rounded-2xl bg-foreground hover:shadow-2xl">
-                <Building2 className="absolute w-40 h-40 text-white/10 -top-8 -right-8" />
-                <div className="relative items-center justify-between lg:flex">
-                  <div className="lg:w-3/5">
-                    <h3 className="text-3xl font-bold">{customPackage.name}</h3>
-                    <p className="mt-2 text-lg text-white/80">
-                      {customPackage.description}
-                    </p>
-                    <ul className="flex flex-wrap mt-4 gap-x-6 gap-y-2">
-                      {customPackage.features.map((feature) => (
-                        <li
-                          key={feature.text}
-                          className="flex items-center gap-2 text-sm font-semibold"
-                        >
-                          <CheckCircle className="flex-shrink-0 w-4 h-4 text-white/80" />
-                          {feature.text}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="mt-6 lg:mt-0 lg:w-auto lg:ml-8">
-                    <button
-                      onClick={handleContactClick}
-                      className="flex items-center justify-center w-full gap-2 px-8 py-3 font-bold text-accent transition-all duration-300 bg-white rounded-full shadow-lg lg:w-auto hover:bg-gray-100 hover:shadow-xl hover:-translate-y-0.5"
-                    >
-                      Contact Sales <ArrowRight size={18} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </section>
         </main>
       </div>
