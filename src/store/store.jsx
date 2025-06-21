@@ -3,21 +3,24 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "../auth/authSlice";
+import creditsReducer from "../auth/creditsSlice";
 
 const authPersistConfig = {
   key: "auth",
   storage,
 };
 
-const pixelPersistConfig = {
-  key: "pixel",
+const creditsPersistConfig = {
+  key: "credits",
   storage,
 };
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedCreditsReducer = persistReducer(creditsPersistConfig, creditsReducer);
 
 const rootReducer = {
   auth: persistedAuthReducer,
+  credits: persistedCreditsReducer,
 };
 
 export const store = configureStore({
