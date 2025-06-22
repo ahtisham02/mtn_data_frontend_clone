@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import CountUp from "react-countup";
 import { removeUserInfo } from "../../auth/authSlice";
-import apiRequest from "../../utils/apiRequest";
+import { fetchCredits } from "../../auth/userSlice";
 import {
   Search,
   UserCircle,
@@ -17,6 +18,17 @@ import {
 } from "lucide-react";
 import { collections } from "../../utils/data";
 import { toast } from "react-toastify";
+
+// A simple, creative loading component for the initial fetch
+const LoadingDots = () => (
+  <div className="flex space-x-1 items-center justify-center p-2">
+    <span className="sr-only">Loading...</span>
+    <div className="h-1.5 w-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+    <div className="h-1.5 w-1.5 bg-current rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+    <div className="h-1.5 w-1.5 bg-current rounded-full animate-bounce"></div>
+  </div>
+);
+
 
 const useClickOutside = (ref, handler) => {
   useEffect(() => {
@@ -39,7 +51,6 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isWalletMenuOpen, setIsWalletMenuOpen] = useState(false);
-  const [creditsInfo, setCreditsInfo] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   const searchRef = useRef(null);
@@ -50,35 +61,19 @@ export default function Header() {
   const navigate = useNavigate();
 
   const token = useSelector((state) => state.auth.userToken);
-  const Hash = useSelector(
-    (state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash
-  );
+  const Hash = useSelector((state) => state.auth.userInfo?.profile?.client?.[0]?.hash);
+  const creditsInfo = useSelector((state) => state.user.creditsInfo);
+  const creditsStatus = useSelector((state) => state.user.status);
 
   useClickOutside(searchRef, () => setIsSearchOpen(false));
   useClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
   useClickOutside(walletMenuRef, () => setIsWalletMenuOpen(false));
 
   useEffect(() => {
-    const fetchCredits = async () => {
-      if (token && Hash) {
-        try {
-          const creditsResponse = await apiRequest(
-            "get",
-            "/user/fetch-credits",
-            null,
-            token,
-            {
-              "x-auth-token": Hash,
-            }
-          );
-          setCreditsInfo(creditsResponse.data);
-        } catch (error) {
-          console.error("Failed to fetch credits:", error);
-        }
-      }
-    };
-    fetchCredits();
-  }, [token, Hash]);
+    if (token && Hash) {
+      dispatch(fetchCredits());
+    }
+  }, [token, Hash, dispatch]);
 
   const allEndpoints = collections.flatMap((c) => c.endpoints);
   const filteredEndpoints = searchTerm
@@ -94,6 +89,8 @@ export default function Header() {
     setIsUserMenuOpen(false);
   };
 
+  const showInitialLoader = creditsStatus === 'loading' && !creditsInfo;
+
   return (
     <header className="flex items-center justify-between px-6 py-3 bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-20 gap-4">
       <div className="flex items-center shrink-0">
@@ -104,41 +101,36 @@ export default function Header() {
       </div>
 
       <div className="hidden lg:flex items-center justify-center gap-3 flex-shrink-0">
-        {creditsInfo ? (
-          <>
-            <div className="flex items-center gap-2 rounded-full bg-rose-100 px-3 py-2 text-rose-800">
-              <CreditCard className="h-[17px] mb-0.5 w-[17px] flex-shrink-0" />
-              <p className="text-[13px] font-medium">
-                Credits:
-                <span className="font-semibold ml-1.5">
-                  {creditsInfo.remainingCredits}
-                </span>
-                <span className="opacity-70">
-                  {" "}
-                  / {creditsInfo.totalCredits}
-                </span>
-              </p>
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-sky-100 px-3 py-2 text-sky-800">
-              <Zap className="h-[17px] mb-0.5 w-[17px] flex-shrink-0" />
-              <p className="text-[13px] font-medium">
-                API Calls:
-                <span className="font-semibold ml-1.5">
-                  {creditsInfo.remainingCalls}
-                </span>
-                <span className="opacity-70">
-                  {" "}
-                  / {creditsInfo.totalCalls}
-                </span>
-              </p>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="h-[34px] w-36 animate-pulse rounded-full bg-muted/60"></div>
-            <div className="h-[34px] w-36 animate-pulse rounded-full bg-muted/60"></div>
-          </>
-        )}
+        <div className="flex items-center gap-2 rounded-full bg-rose-100 px-3 py-2 text-rose-800 min-w-[140px] justify-center">
+          <CreditCard className="h-[17px] mb-0.5 w-[17px] flex-shrink-0" />
+          {showInitialLoader ? <LoadingDots /> : (
+            <p className="text-[13px] font-medium">
+              Credits:
+              <span className="font-semibold ml-1.5">
+                <CountUp start={0} end={creditsInfo?.remainingCredits || 0} duration={1} separator="," />
+              </span>
+              <span className="opacity-70">
+                {" / "}
+                <CountUp start={0} end={creditsInfo?.totalCredits || 0} duration={1} separator="," />
+              </span>
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-2 rounded-full bg-sky-100 px-3 py-2 text-sky-800 min-w-[140px] justify-center">
+          <Zap className="h-[17px] mb-0.5 w-[17px] flex-shrink-0" />
+           {showInitialLoader ? <LoadingDots /> : (
+            <p className="text-[13px] font-medium">
+              API Calls:
+              <span className="font-semibold ml-1.5">
+                 <CountUp start={0} end={creditsInfo?.remainingCalls || 0} duration={1} separator="," />
+              </span>
+              <span className="opacity-70">
+                {" / "}
+                 <CountUp start={0} end={creditsInfo?.totalCalls || 0} duration={1} separator="," />
+              </span>
+            </p>
+          )}
+        </div>
       </div>
 
       <div ref={searchRef} className="flex-1 max-w-lg relative">
@@ -195,18 +187,22 @@ export default function Header() {
           </button>
           {isWalletMenuOpen && (
             <div className="absolute top-full right-0 mt-2 w-64 bg-card border border-border rounded-md shadow-lg z-10 p-3">
-              {creditsInfo ? (
+              {showInitialLoader ? (
+                <div className="flex justify-center items-center h-20">
+                    <LoadingDots/>
+                </div>
+              ) : (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 rounded-md bg-rose-100 px-3 py-2 text-rose-800">
                     <CreditCard className="h-[17px] mb-0.5 w-[17px] flex-shrink-0" />
                     <p className="text-[13px] font-medium">
                       Credits:
                       <span className="font-semibold ml-1.5">
-                        {creditsInfo.remainingCredits}
+                        <CountUp end={creditsInfo?.remainingCredits || 0} duration={1}/>
                       </span>
                       <span className="opacity-70">
-                        {" "}
-                        / {creditsInfo.totalCredits}
+                        {" / "}
+                        <CountUp end={creditsInfo?.totalCredits || 0} duration={1}/>
                       </span>
                     </p>
                   </div>
@@ -215,19 +211,14 @@ export default function Header() {
                     <p className="text-[13px] font-medium">
                       API Calls:
                       <span className="font-semibold ml-1.5">
-                        {creditsInfo.remainingCalls}
+                        <CountUp end={creditsInfo?.remainingCalls || 0} duration={1}/>
                       </span>
                       <span className="opacity-70">
-                        {" "}
-                        / {creditsInfo.totalCalls}
+                        {" / "}
+                        <CountUp end={creditsInfo?.totalCalls || 0} duration={1}/>
                       </span>
                     </p>
                   </div>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <div className="h-[38px] w-full animate-pulse rounded-md bg-muted/60"></div>
-                  <div className="h-[38px] w-full animate-pulse rounded-md bg-muted/60"></div>
                 </div>
               )}
             </div>

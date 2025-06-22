@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Code, Users, Tag, Zap, Gauge, Clock, CheckCircle, Target, ChevronRight,
   Edit, Save, X, ChevronDown, AlertCircle,
@@ -11,7 +11,7 @@ import ContactModal from "./ContactModal";
 import Spinner from "./Spinner";
 import ApiResponseViewer from "./ApiResponseViewer";
 import { removeUserInfo } from "../../auth/authSlice";
-import { useDispatch } from "react-redux";
+import { fetchCredits } from "../../auth/userSlice";
 
 const analyticsEndpointUsage = collections
   .flatMap((collection) =>
@@ -501,6 +501,9 @@ export default function EndpointPage({ endpoint }) {
         responseHeaders: responseHeaders,
         data: responseData,
       });
+
+      dispatch(fetchCredits());
+
     } catch (error) {
       const endTime = performance.now();
       setTestResult({
