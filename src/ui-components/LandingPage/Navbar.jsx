@@ -54,7 +54,7 @@ const Navbar = () => {
               </RouterLink>
             ) : (
               <RouterLink to="/login" className="hidden px-6 py-2 font-semibold text-white transition-all duration-300 rounded-full shadow-lg sm:block bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
-                Login
+                Start Free Trial
               </RouterLink>
             )}
             <button

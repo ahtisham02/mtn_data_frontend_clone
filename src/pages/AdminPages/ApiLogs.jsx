@@ -30,9 +30,15 @@ export default function ApiLogs() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pageCount, setPageCount] = useState(0);
+  const [totalLogs, setTotalLogs] = useState(0);
+  const [totalErrors, setTotalErrors] = useState(0);
+  const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
   const token = useSelector((state) => state.auth.userToken);
   const userHash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash);
+
+  const pagination = useMemo(() => ({ pageIndex, pageSize }), [pageIndex, pageSize]);
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -41,20 +47,27 @@ export default function ApiLogs() {
         setLoading(false);
         return;
       }
+      setLoading(true);
        try {
-        const response = await apiRequest('get', '/user/fetch-logs', null, token, { 'x-auth-token': userHash });
+        const response = await apiRequest('get', `/user/fetch-logs?page=${pageIndex}`, null, token, { 'x-auth-token': userHash });
         setLogs(response.data.logs || []);
+        setPageCount(response.data.totalPages || 0);
+        setTotalLogs(response.data.totalLogs || 0);
+        setTotalErrors(response.data.totalErrors || 0);
       } catch (err) {
         setError(err.message);
+        setLogs([]);
+        setPageCount(0);
         toast.error(err.message);
       } finally {
         setLoading(false);
       }
     };
     fetchLogs();
-  }, [token, userHash]);
+  }, [token, userHash, pageIndex, pageSize]);
 
   const sortedLogs = useMemo(() => {
+    if (!logs) return [];
     return [...logs].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }, [logs]);
 
@@ -65,10 +78,6 @@ export default function ApiLogs() {
     { header: 'IP Address', accessorKey: 'ip', cell: ({ getValue }) => getValue() },
     { header: 'Date', accessorKey: 'createdAt', cell: ({ getValue }) => format(new Date(getValue()), "MMM dd, yyyy 'at' hh:mm a") },
   ], []);
-
-  const totalErrors = useMemo(() => {
-    return logs.filter(log => log.status >= 400).length;
-  }, [logs]);
 
   return (
     <div className="p-4 sm:p-6 space-y-8">
@@ -84,12 +93,12 @@ export default function ApiLogs() {
         </div>
         <div className="flex-shrink-0 flex items-center gap-6 w-full md:w-auto">
           <div className="flex-1 text-left md:text-right">
-            <p className="text-sm font-nowrap font-semibold text-muted-foreground uppercase tracking-wider">Total Requests</p>
-            <p className="text-2xl font-bold text-accent">{logs.length.toLocaleString()}</p>
+            <p className="text-sm font-semibold text-muted-foreground text-nowrap uppercase tracking-wider">Total Errors</p>
+            <p className="text-2xl font-bold text-accent">{totalErrors.toLocaleString()}</p>
           </div>
           <div className="flex-1 text-left md:text-right">
-            <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Errors</p>
-            <p className="text-2xl font-bold text-accent">{totalErrors.toLocaleString()}</p>
+            <p className="text-sm font-nowrap font-semibold text-muted-foreground text-nowrap uppercase tracking-wider">Total Requests</p>
+            <p className="text-2xl font-bold text-accent">{totalLogs.toLocaleString()}</p>
           </div>
         </div>
       </div>
@@ -102,6 +111,9 @@ export default function ApiLogs() {
         icon={Database}
         title="Request History"
         subtitle="Search and filter through all your API calls."
+        pageCount={pageCount}
+        pagination={pagination}
+        onPaginationChange={setPagination}
       />
     </div>
   );

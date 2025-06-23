@@ -75,12 +75,12 @@ export default function SubscriptionHistory() {
         </div>
         <div className="flex-shrink-0 flex items-center gap-6 w-full md:w-auto">
           <div className="flex-1 text-left md:text-right">
-            <p className="text-sm font-semibold text-nowrap text-muted-foreground uppercase tracking-wider">Total Credits</p>
-            <p className="text-2xl font-bold text-accent">{(clientData?.totalCredits || 0).toLocaleString()}</p>
-          </div>
-          <div className="flex-1 text-left md:text-right">
             <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Remaining</p>
             <p className="text-2xl font-bold text-accent">{(clientData?.remainingCredits || 0).toLocaleString()}</p>
+          </div>
+          <div className="flex-1 text-left md:text-right">
+            <p className="text-sm font-semibold text-nowrap text-muted-foreground uppercase tracking-wider">Total Credits</p>
+            <p className="text-2xl font-bold text-accent">{(clientData?.totalCredits || 0).toLocaleString()}</p>
           </div>
         </div>
       </div>

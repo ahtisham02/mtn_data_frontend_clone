@@ -572,6 +572,9 @@ export default function ApiAnalytics() {
   const [loadingPlanId, setLoadingPlanId] = useState(null);
   const [timeRange, setTimeRange] = useState("7d");
   const [currentPlanId] = useState("plan_pro");
+  const [callVolumeData, setCallVolumeData] = useState([]);
+  const [callVolumeLoading, setCallVolumeLoading] = useState(true);
+  const [callVolumeError, setCallVolumeError] = useState(null);
 
   const {
     logs,
@@ -598,6 +601,44 @@ export default function ApiAnalytics() {
     fetchLogs();
   }, [dispatch, token, userHash]);
 
+  useEffect(() => {
+    const fetchCallVolume = async () => {
+      if (!token || !userHash) return;
+      setCallVolumeLoading(true);
+      setCallVolumeError(null);
+      try {
+        const response = await apiRequest('get', '/user/call-volume', null, token, { 'x-auth-token': userHash });
+        setCallVolumeData(response.data.logsPerDay || []);
+      } catch (error) {
+        setCallVolumeError(error.message);
+        toast.error("Failed to fetch API call volume: " + error.message);
+      } finally {
+        setCallVolumeLoading(false);
+      }
+    };
+    fetchCallVolume();
+  }, [token, userHash]);
+
+  const processedApiCallVolume = useMemo(() => {
+    if (!callVolumeData || callVolumeData.length === 0) return [];
+
+    const now = new Date();
+    const daysInRange = { '7d': 7, '30d': 30, '90d': 90 }[timeRange];
+    
+    const cutoffDate = new Date(now);
+    cutoffDate.setDate(now.getDate() - daysInRange);
+    cutoffDate.setHours(0, 0, 0, 0);
+
+    return callVolumeData
+        .map(item => ({ ...item, dateObj: new Date(item.date) }))
+        .filter(item => item.dateObj >= cutoffDate)
+        .sort((a, b) => a.dateObj - b.dateObj)
+        .map(item => ({
+            label: item.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            value: item.count
+        }));
+  }, [callVolumeData, timeRange]);
+
   const dynamicData = useMemo(() => {
     const defaultData = {
       stats: [
@@ -614,11 +655,6 @@ export default function ApiAnalytics() {
         { name: "> 500ms", requests: 0 },
       ],
       requestMethodsData: [],
-      apiCallVolume: {
-        "7d": Array(7).fill(0).map((_, i) => ({ label: `Day ${i + 1}`, value: 0 })),
-        "30d": Array(30).fill(0).map((_, i) => ({ label: `Day ${i + 1}`, value: 0 })),
-        "90d": Array(12).fill(0).map((_, i) => ({ label: `Week ${i + 1}`, value: 0 })),
-      },
     };
 
     if (!logs || !userHash) {
@@ -708,34 +744,8 @@ export default function ApiAnalytics() {
       { name: "> 500ms", requests: Math.round((latencyBaseDistribution[4] / totalDist) * logs.length) },
     ];
     
-    const generateVolumeData = (days) => {
-        const volume = Array.from({ length: days }, (_, i) => {
-            const date = new Date();
-            date.setDate(date.getDate() - (days - 1 - i));
-            return {
-                label: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-                jsDate: date.toISOString().split("T")[0],
-                value: 0
-            };
-        });
-
-        logs.forEach(log => {
-            const logDateStr = new Date(log.createdAt).toISOString().split("T")[0];
-            const dayEntry = volume.find(d => d.jsDate === logDateStr);
-            if (dayEntry) {
-                dayEntry.value++;
-            }
-        });
-        return volume.map(({ label, value }) => ({ label, value }));
-    };
-
     return {
         stats, pieData, endpointUsage, latencyData, requestMethodsData,
-        apiCallVolume: {
-            "7d": generateVolumeData(7),
-            "30d": generateVolumeData(30),
-            "90d": generateVolumeData(90),
-        }
     };
   }, [logs, userHash]);
 
@@ -839,9 +849,17 @@ export default function ApiAnalytics() {
                   ))}
                 </div>
               </div>
-              <ApiCallVolumeChart
-                data={dynamicData.apiCallVolume[timeRange]}
-              />
+              {callVolumeLoading ? (
+                <div className="w-full h-80 flex items-center justify-center">
+                    <Loader className="animate-spin h-8 w-8 text-accent" />
+                </div>
+              ) : callVolumeError ? (
+                <div className="w-full h-80 flex items-center justify-center text-red-500">
+                    <p>Could not load chart data.</p>
+                </div>
+              ) : (
+                <ApiCallVolumeChart data={processedApiCallVolume} />
+              )}
             </div>
           </section>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,22 +1,59 @@
-import React, { useState } from 'react';
-import { useReactTable, getCoreRowModel, getFilteredRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import React, { useState, useEffect } from 'react';
+import { 
+  useReactTable, 
+  getCoreRowModel, 
+  getFilteredRowModel, 
+  getPaginationRowModel 
+} from '@tanstack/react-table';
 import { Search, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
 import DataStreamLoader from '../ui-components/AdminPage/DashboardLoader';
 
-const DataTable = ({ columns, data, isLoading, error, icon: Icon, title, subtitle }) => {
+const DataTable = ({
+  columns,
+  data,
+  isLoading,
+  error,
+  icon: Icon,
+  title,
+  subtitle,
+  pageCount: controlledPageCount,
+  pagination: controlledPagination,   // Renamed for clarity
+  onPaginationChange: setControlledPagination, // Renamed for clarity
+}) => {
   const [globalFilter, setGlobalFilter] = useState('');
+
+  const isControlled = !!setControlledPagination;
+
+  const [internalPagination, setInternalPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const pagination = isControlled ? controlledPagination : internalPagination;
+  const setPagination = isControlled ? setControlledPagination : setInternalPagination;
 
   const table = useReactTable({
     data,
     columns,
     state: {
       globalFilter,
+      pagination,
     },
+    onPaginationChange: setPagination,
+    manualPagination: isControlled,
+    pageCount: isControlled ? controlledPageCount : undefined,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+  
+  useEffect(() => {
+    if (!isControlled) {
+      table.setPageIndex(0);
+    }
+  }, [data, isControlled, table]);
+
 
   if (isLoading) {
     return <DataStreamLoader />;
