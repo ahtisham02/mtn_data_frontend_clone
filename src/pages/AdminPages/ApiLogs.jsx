@@ -31,8 +31,6 @@ export default function ApiLogs() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pageCount, setPageCount] = useState(0);
-  const [totalLogs, setTotalLogs] = useState(0);
-  const [totalErrors, setTotalErrors] = useState(0);
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
   const token = useSelector((state) => state.auth.userToken);
@@ -52,8 +50,6 @@ export default function ApiLogs() {
         const response = await apiRequest('get', `/user/fetch-logs?page=${pageIndex}`, null, token, { 'x-auth-token': userHash });
         setLogs(response.data.logs || []);
         setPageCount(response.data.totalPages || 0);
-        setTotalLogs(response.data.totalLogs || 0);
-        setTotalErrors(response.data.totalErrors || 0);
       } catch (err) {
         setError(err.message);
         setLogs([]);
@@ -74,31 +70,21 @@ export default function ApiLogs() {
   const columns = useMemo(() => [
     { header: 'Method', accessorKey: 'method', cell: ({ getValue }) => <MethodBadge method={getValue()} /> },
     { header: 'Status', accessorKey: 'status', cell: ({ getValue }) => <StatusBadge status={getValue()} /> },
-    { header: 'Path', accessorKey: 'path', cell: ({ getValue }) => getValue() },
+    { header: 'Path', accessorKey: 'path', cell: ({ getValue }) => <div className="truncate max-w-xs">{getValue()}</div> },
     { header: 'IP Address', accessorKey: 'ip', cell: ({ getValue }) => getValue() },
     { header: 'Date', accessorKey: 'createdAt', cell: ({ getValue }) => format(new Date(getValue()), "MMM dd, yyyy 'at' hh:mm a") },
   ], []);
 
   return (
-    <div className="p-4 sm:p-6 space-y-8">
-       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 p-6 bg-card border border-border rounded-2xl shadow-lg">
-        <div className="flex items-center gap-5">
-          <div className="flex-shrink-0 p-4 bg-accent/10 text-accent rounded-2xl">
-            <Activity className="h-8 w-8" />
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 sm:p-6 bg-card border border-border rounded-xl shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="flex-shrink-0 p-3 sm:p-4 bg-accent/10 text-accent rounded-xl">
+            <Activity className="h-7 w-7 sm:h-8 sm:w-8" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">API Logs</h1>
-            <p className="text-base text-muted-foreground mt-1">A detailed record of your recent API requests.</p>
-          </div>
-        </div>
-        <div className="flex-shrink-0 flex items-center gap-6 w-full md:w-auto">
-          <div className="flex-1 text-left md:text-right">
-            <p className="text-sm font-semibold text-muted-foreground text-nowrap uppercase tracking-wider">Total Errors</p>
-            <p className="text-2xl font-bold text-accent">{totalErrors.toLocaleString()}</p>
-          </div>
-          <div className="flex-1 text-left md:text-right">
-            <p className="text-sm font-nowrap font-semibold text-muted-foreground text-nowrap uppercase tracking-wider">Total Requests</p>
-            <p className="text-2xl font-bold text-accent">{totalLogs.toLocaleString()}</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">API Logs</h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">A detailed record of your recent API requests.</p>
           </div>
         </div>
       </div>

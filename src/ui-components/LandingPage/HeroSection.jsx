@@ -30,12 +30,12 @@ const HeroSection = () => {
           <div className="flex flex-col justify-center text-center lg:text-left">
             <motion.h1
               variants={fadeInUp}
-              className="text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl"
+              className="text-4xl font-bold leading-none md:leading-tight text-foreground md:text-5xl lg:text-6xl"
             >
               Real-Time <span className="text-accent">Professional</span> &
               Company Data,
               <span className="relative inline-block">
-                <span className="absolute top-12 w-full h-3 bg-accent/20"></span>
+                <span className="absolute md:top-12 top-7 w-full h-3 bg-accent/20"></span>
                 <span className="relative">Delivered via API</span>
               </span>
             </motion.h1>
@@ -69,7 +69,7 @@ const HeroSection = () => {
               </ScrollLink>
             </motion.div>
           </div>
-
+          
           <motion.div variants={fadeInUp} className="w-full max-w-lg mx-auto">
             <div className="flex items-center justify-center gap-2 p-3 font-bold text-white rounded-t-lg bg-accent">
               <Volume2 size={20} />
@@ -77,8 +77,10 @@ const HeroSection = () => {
             </div>
             <div className="overflow-hidden rounded-b-lg shadow-2xl aspect-w-16 aspect-h-[8.7] relative">
               <video
-                src="https://www.w3schools.com/html/mov_bbb.mp4"
+                src="/hero-video-optimized1.mp4" 
                 loop
+                autoPlay
+                muted
                 playsInline
                 controls
                 className="w-full h-auto rounded-b-lg"

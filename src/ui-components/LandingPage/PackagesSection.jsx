@@ -216,7 +216,7 @@ const PackagesSection = () => {
           <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
             Simple Pricing,
             <span className="relative inline-block ml-3">
-              <span className="absolute bottom-1 w-full h-3 bg-accent/20"></span>
+              <span className="absolute md:top-9 top-8 w-full h-3 bg-accent/20"></span>
               <span className="relative">Full Access</span>
             </span>
           </h2>
@@ -245,10 +245,10 @@ const PackagesSection = () => {
             className="cursor-pointer"
           >
             <button className="inline-flex flex-col items-center px-8 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
-              <span className="flex items-center text-lg">
+              <span className="flex leading-tight md:leading-normal items-center text-lg">
                 Subscribe in Minutes. Cancel Anytime{" "}
               </span>
-              <span className="text-xs font-normal tracking-wider uppercase">
+              <span className="text-[14px] font-normal pt-1 md:pt-0 tracking-wider uppercase">
                 Start Now{" "}
               </span>
             </button>

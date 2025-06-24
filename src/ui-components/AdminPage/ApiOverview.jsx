@@ -862,7 +862,7 @@ export default function ApiAnalytics() {
               )}
             </div>
           </section>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <LatencyDistributionChart data={dynamicData.latencyData} />
             <RequestMethodsChart data={dynamicData.requestMethodsData} />
           </div>
@@ -887,7 +887,7 @@ export default function ApiAnalytics() {
               <Layers className="h-6 w-6 text-accent" />
               Billing & Plans
             </h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-1 lg:grid-cols-2">
               {packages.map((pkg) => (
                 <PackageCard
                   key={pkg.id}

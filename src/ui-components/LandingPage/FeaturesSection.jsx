@@ -62,7 +62,7 @@ const FeaturesSection = () => {
           <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
             What Can You Do with
             <span className="relative inline-block ml-3">
-              <span className="absolute top-10 w-full h-3 bg-accent/20"></span>
+              <span className="absolute top-8 md:top-10 w-full h-3 bg-accent/20"></span>
               <span className="relative">Our API?</span>
             </span>
           </h2>
@@ -87,7 +87,7 @@ const FeaturesSection = () => {
           </motion.div>
         </div>
 
-        <div className="relative mt-8 min-h-[160px] w-full max-w-4xl mx-auto px-8 pt-10 rounded-2xl bg-card shadow-lg">
+        <div className="relative mt-8 min-h-[160px] w-full max-w-4xl mx-auto px-8 py-8 md:py-0 md:pt-10 rounded-2xl bg-card shadow-lg">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeFeature.title}
@@ -97,8 +97,8 @@ const FeaturesSection = () => {
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center text-center md:flex-row md:text-left md:gap-8"
             >
-              <div className="flex-shrink-0 p-4 rounded-full bg-accent/10">
-                <activeFeature.icon className="w-10 h-10 text-accent" />
+              <div className="flex-shrink-0 md:p-4 p-3 rounded-full bg-accent/10">
+                <activeFeature.icon className="md:w-10 md:h-10 w-6 h-6 text-accent" />
               </div>
               <div>
                 <p className="mt-2 text-lg text-muted">
@@ -118,10 +118,10 @@ const FeaturesSection = () => {
             className="cursor-pointer"
           >
             <button className="inline-flex flex-col items-center px-8 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
-              <span className="flex items-center text-lg">
+              <span className="flex leading-tight md:leading-normal items-center text-lg">
                 Power Your Platform with Scalable, Enriched Data
               </span>
-              <span className="text-xs font-normal tracking-wider uppercase">
+              <span className="text-[14px] font-normal pt-3 md:pt-0 tracking-wider uppercase">
                 Get API Access
               </span>
             </button>

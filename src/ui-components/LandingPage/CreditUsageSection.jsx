@@ -44,7 +44,6 @@ const TokenSystemSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           variants={staggerContainer}
         >
-          {/* Left side content */}
           <motion.div variants={fadeInUp}>
             <p className="text-sm font-bold tracking-wider uppercase text-accent">
               Credit Usage
@@ -52,24 +51,27 @@ const TokenSystemSection = () => {
             <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
               Simple &
               <span className="relative inline-block ml-3">
-                <span className="absolute top-10 w-full h-3 bg-accent/20"></span>
+                <span className="absolute md:top-10 top-8 w-full h-3 bg-accent/20"></span>
                 <span className="relative">Fair Pricing</span>
               </span>
             </h2>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 mt-4 font-semibold transition-colors text-accent hover:text-blue-400"
+            <ScrollLink
+              to="packages"
+              spy={true}
+              smooth={true}
+              offset={-70}
+              duration={800}
+              className="cursor-pointer inline-flex items-center gap-2 mt-4 font-semibold transition-colors text-accent hover:text-blue-400"
             >
               Explore our full pricing guide <ArrowRight size={16} />
-            </a>
+            </ScrollLink>
           </motion.div>
 
-          {/* Right side content - The list of pricing tiers */}
           <motion.div className="space-y-6" variants={fadeInUp}>
             {pricingTiers.map((item) => (
               <div key={item.title}>
                 <div className="flex items-baseline justify-between pb-2 border-b border-slate-700">
-                  <h3 className="flex items-center gap-3 text-xl font-bold">
+                  <h3 className="flex items-center gap-3 sm:text-xl text-lg font-bold">
                     <CheckCircle size={20} className="text-accent" />
                     {item.title}
                   </h3>
@@ -80,7 +82,6 @@ const TokenSystemSection = () => {
           </motion.div>
         </motion.div>
 
-        {/* Security section at the bottom */}
         <motion.div
           className="relative mt-24 text-center"
           initial="hidden"
@@ -107,7 +108,7 @@ const TokenSystemSection = () => {
             </p>
             <div className="mt-8">
               <ScrollLink
-                to="booking" // This can be changed to a relevant section ID like "contact" or "demo"
+                to="booking"
                 spy={true}
                 smooth={true}
                 offset={-70}

@@ -29,7 +29,7 @@ const FaqSection = () => {
           <h2 className="mt-2 text-4xl font-bold text-foreground md:text-5xl">
             Clearing Your
             <span className="relative inline-block ml-3">
-              <span className="absolute top-10 w-full h-3 bg-accent/20"></span>
+              <span className="absolute md:top-10 top-8 w-full h-3 bg-accent/20"></span>
               <span className="relative">Doubts</span>
             </span>
           </h2>

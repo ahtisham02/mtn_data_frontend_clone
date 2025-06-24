@@ -182,12 +182,12 @@ const CreditUsageSection = () => {
         </div>
 
         <div className="w-full max-w-6xl p-4 mx-auto mt-12 border rounded-2xl bg-card border-border shadow-lg sm:p-6">
-          <div className="flex flex-wrap md:justify-center items-center gap-2 p-2 border rounded-full bg-background border-border">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-2 p-2 border rounded-xl sm:rounded-full bg-background border-border">
             {creditData.map((item) => (
               <button
                 key={item.category}
                 onClick={() => setActiveCategory(item.category)}
-                className={`px-4 py-2 text-sm sm:text-base font-semibold rounded-full transition-colors duration-300 flex-grow sm:flex-grow-0 ${
+                className={`w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-semibold rounded-full transition-colors duration-300 ${
                   activeCategory === item.category
                     ? "bg-accent text-white"
                     : "text-muted hover:bg-white"
@@ -253,10 +253,10 @@ const CreditUsageSection = () => {
             className="cursor-pointer"
           >
             <button className="inline-flex flex-col items-center px-8 py-3 font-semibold text-white transition-all duration-300 rounded-full shadow-lg bg-gradient-to-r from-accent to-accent-hover hover:shadow-xl hover:-translate-y-0.5">
-              <span className="flex items-center text-lg">
+              <span className="flex leading-tight md:leading-normal items-center text-lg">
                 CONTACT US FOR ALL API ENDPOINTS
               </span>
-              <span className="text-xs font-normal tracking-wider uppercase">
+              <span className="text-[14px] font-normal pt-1 md:pt-0 tracking-wider uppercase">
                 Schedule a Free Consultation
               </span>
             </button>

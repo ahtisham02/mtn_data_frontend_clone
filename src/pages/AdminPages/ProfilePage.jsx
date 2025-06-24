@@ -202,7 +202,7 @@ const ProfilePage = () => {
 
   return (
     <motion.div
-      className="min-h-screen p-4 bg-background text-slate-800"
+      className="min-h-screen bg-background text-slate-800"
       initial="hidden"
       animate="visible"
       variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
