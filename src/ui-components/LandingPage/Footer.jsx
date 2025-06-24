@@ -78,18 +78,18 @@ const Footer = () => {
                 className="flex items-center gap-3 transition-colors hover:text-accent"
               >
                 <Phone size={18} className="text-accent" />
-                <span>+1 (123) 456-7890</span>
+                <span>+1 (877) 333-5540</span>
               </a>
               <a
                 href="mailto:contact@mtndatascrapex.com"
                 className="flex items-center gap-3 transition-colors hover:text-accent"
               >
                 <Mail size={18} className="text-accent" />
-                <span>contact@mtndatascrapex.com</span>
+                <span>info@mtndatascrapex.com</span>
               </a>
               <p className="flex items-center gap-3">
                 <MapPin size={18} className="flex-shrink-0 text-accent" />
-                <span>123 Innovation Drive, Suite 100, Tech City, USA</span>
+                <span>2117 Lake Ave, Altadena 91001</span>
               </p>
             </address>
           </div>
