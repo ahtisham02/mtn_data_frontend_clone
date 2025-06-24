@@ -77,7 +77,7 @@ const HeroSection = () => {
             </div>
             <div className="overflow-hidden rounded-b-lg shadow-2xl aspect-w-16 aspect-h-[8.7] relative">
               <video
-                src="/hero-video-optimized1.mp4" 
+                src="/hero-video-optimized.mp4" 
                 loop
                 autoPlay
                 muted
