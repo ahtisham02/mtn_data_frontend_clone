@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mountain } from "lucide-react";
+import logo from "../assets/logo2.png"
 import Intercom from "@intercom/messenger-js-sdk";
 
 const AuthLayout = ({ children, pageTitle, welcomeMessage }) => {
@@ -43,7 +43,7 @@ const AuthLayout = ({ children, pageTitle, welcomeMessage }) => {
                   repeatType: "mirror",
                 }}
               >
-                <Mountain className="w-12 h-12 text-accent" />
+                <img src={logo} className="w-12 h-12 text-accent" />
               </motion.div>
               <span className="text-4xl font-bold text-white">MTN DATA</span>
             </motion.div>

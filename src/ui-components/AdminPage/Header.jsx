@@ -9,7 +9,6 @@ import {
   UserCircle,
   User,
   LogOut,
-  Mountain,
   FileCode2,
   FileClock,
   CreditCard,
@@ -19,7 +18,7 @@ import {
 } from "lucide-react";
 import { collections } from "../../utils/data";
 import { toast } from "react-toastify";
-
+import logo from "../../assets/logo2.png"
 const LoadingDots = () => (
   <div className="flex items-center justify-center p-2 space-x-1">
     <span className="sr-only">Loading...</span>
@@ -95,16 +94,14 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, closeSidebar }
     <header className="flex items-center justify-between px-3 sm:px-6 py-3 bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-20 gap-4">
       <div className="flex items-center shrink-0">
         <button
-          // CHANGED: This now toggles the sidebar state
           onClick={() => setIsSidebarOpen(prevState => !prevState)}
           className="mr-3 md:hidden"
-          // CHANGED: The label is now dynamic for better accessibility
           aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
           <Menu className="w-6 h-6" />
         </button>
         <div className="flex items-center space-x-3">
-          <Mountain className="w-8 h-8 mb-0.5 text-accent" />
+          <img src={logo} className="w-10 h-10 mb-0.5 text-accent" />
           <div className="hidden font-bold text-black sm:block text-2xl">MTN DATA</div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link as ScrollLink } from "react-scroll";
-import { Mountain, Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
+import logo from "../../assets/logo2.png"
 
 const Footer = () => {
   const quickLinks = [
@@ -31,7 +32,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[34fr_19fr_19fr_28fr]">
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <div className="flex items-center gap-3 mb-4">
-              <Mountain className="w-10 h-10 text-accent" />
+              <img src={logo} className="w-10 h-10 text-accent" />
               <span className="text-3xl font-bold">MTN DATA</span>
             </div>
             <p className="max-w-xs text-muted">

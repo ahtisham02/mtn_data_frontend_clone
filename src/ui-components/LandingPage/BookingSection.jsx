@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { InlineWidget } from "react-calendly";
-import { Mountain, Clock, Calendar } from "lucide-react";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -35,53 +34,27 @@ const ConsultationSection = () => {
         </motion.div>
 
         <motion.div
-          className="mt-16 overflow-hidden border border-border bg-card rounded-2xl shadow-xl"
+          className="mt-16 overflow-hidden bg-card rounded-2xl shadow-xl border border-gray-100"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
           variants={fadeInUp}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-3">
-            {/* Left side info panel */}
-            <div className="p-8 border-b lg:border-b-0 lg:border-r border-border">
-              <div className="flex items-center gap-2">
-                <Mountain className="w-8 h-8 text-accent" />
-                <span className="text-xl font-bold text-foreground">
-                  MTN DATA
-                </span>
-              </div>
-              <h3 className="mt-8 text-2xl font-bold text-foreground">
-                Book a Demo & Strategy Call
-              </h3>
-              <div className="mt-6 space-y-4 text-muted">
-                <div className="flex items-center gap-3">
-                  <Clock size={20} />
-                  <span>30-Minute Session</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Calendar size={20} />
-                  <span>Pick a Convenient Time</span>
-                </div>
-              </div>
-              <p className="mt-6 text-sm text-muted">
-                Learn how our API provides the professional data and AI-driven analytics you need. In this call, we'll determine if our solution is the perfect match for your goals.
-              </p>
-            </div>
-
-            {/* Right side Calendly widget */}
-            <div className="lg:col-span-2 min-h-[700px]">
-              <InlineWidget
-                url="https://calendly.com/razorsgamer2005/30min"
-                styles={{ height: "700px", width: "100%" }}
-                pageSettings={{
-                  backgroundColor: "ffffff",
-                  hideEventTypeDetails: true,
-                  hideLandingPageDetails: true,
-                  primaryColor: "3b82f6",
-                  textColor: "0f172a",
-                }}
-              />
-            </div>
+          <div className="min-h-[700px]">
+            <InlineWidget
+              url="https://link.salesdriver.io/widget/booking/sCsG5spjB0z4If0w1JBa"
+              styles={{
+                height: "724px",
+                width: "100%",
+              }}
+              pageSettings={{
+                backgroundColor: "ffffff",
+                primaryColor: "3b82f6",
+                textColor: "0f172a",
+                hideLandingPageDetails: true,
+                hideEventTypeDetails: true,
+              }}
+            />
           </div>
         </motion.div>
       </div>

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mountain, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import logo from "../../assets/logo2.png"
 
 const Navbar = () => {
   const userToken = useSelector((state) => state.auth.userToken);
@@ -33,7 +34,7 @@ const Navbar = () => {
       <div className="container px-4 mx-auto max-w-7xl">
         <div className="flex items-center justify-between h-20">
           <ScrollLink to="home" {...linkProps} offset={-100} className="flex items-center gap-2 cursor-pointer">
-            <Mountain className="w-8 h-8 text-accent" />
+            <img src={logo} className="w-10 h-10 text-accent" />
             <span className="text-2xl font-bold text-foreground">MTN DATA</span>
           </ScrollLink>
 
