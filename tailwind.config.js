@@ -14,8 +14,8 @@ export default {
         "card-foreground": "#1c1917",
         muted: "#78716c",
         "muted-foreground": "#a8a29e",
-        accent: "#f43f5e",
-        "accent-hover": "#e11d48",
+        accent: "#337AFF",
+  "accent-hover": "#60A5FA",
         border: "#d6d3d1",
       },
       animation: {
@@ -40,4 +40,5 @@ export default {
     },
   },
   plugins: [],
+  safelist: ["font-plus-jakarta"],
 };
