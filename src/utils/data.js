@@ -1866,6 +1866,29 @@ export const collections = [
         ],
         response: {},
       },
+      {
+        slug: "person-profile-inmail",
+        method: "POST",
+        name: "Get person inMail",
+        url: `${API_BASE_URL}/person/profile-inmail`,
+        params: [],
+        headers: [{ key: "Content-Type", value: "application/json" }],
+        auth: { type: "None", details: "This endpoint is open." },
+        body: JSON.stringify(
+          { link: "https://linkedin.com/in/aneeqkhurram007" },
+          null,
+          2
+        ),
+        requestSchema: [
+          {
+            field: "link",
+            type: "string (url)",
+            required: true,
+            description: "LinkedIn profile URL.",
+          },
+        ],
+        response: {},
+      },
     ],
   },
   {
