@@ -15,13 +15,14 @@ export default {
         muted: "#78716c",
         "muted-foreground": "#a8a29e",
         accent: "#337AFF",
-  "accent-hover": "#60A5FA",
+        "accent-hover": "#60A5FA",
         border: "#d6d3d1",
       },
       animation: {
         aurora: "aurora 20s ease-in-out infinite",
         marquee: "marquee 40s linear infinite",
         stream: "stream 1.5s ease-in-out infinite",
+        modalFadeInScale: "modalFadeInScale 0.3s ease-in-out",
       },
       keyframes: {
         aurora: {
@@ -35,6 +36,16 @@ export default {
         stream: {
           "0%, 100%": { transform: "scaleY(0.1)" },
           "50%": { transform: "scaleY(1)" },
+        },
+        modalFadeInScale: {
+          "0%": {
+            opacity: "0",
+            transform: "scale(.95)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "scale(1)",
+          },
         },
       },
     },

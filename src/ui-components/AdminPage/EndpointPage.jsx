@@ -8,6 +8,7 @@ import Spinner from "./Spinner";
 import ApiResponseViewer from "./ApiResponseViewer";
 import { removeUserInfo } from "../../auth/authSlice";
 import { fetchCredits } from "../../auth/userSlice";
+import UpgradeModal from "../UpgradeModal";
 
 const getMethodClass = (method) => {
   switch (method?.toUpperCase()) {
@@ -124,9 +125,10 @@ export default function EndpointPage({ endpoint }) {
   const [testResult, setTestResult] = useState(null);
   const [activeRequestTab, setActiveRequestTab] = useState("Params");
   
-  const requestTabs = ["Parameters", "Headers", "Authorization", "Body"];
+  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
+  const remainingCredits = useSelector((state) => state.user.creditsInfo?.remainingCredits);
   
-  const Hash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash); 
+  const Hash = useSelector((state) => state.auth.userInfo?.profile?.client?.[0]?.hash); 
   const token = useSelector((state) => state.auth.userToken);
   const dispatch = useDispatch();
 
@@ -144,6 +146,11 @@ export default function EndpointPage({ endpoint }) {
   }, [endpoint]);
 
   const handleTestEndpoint = async () => {
+    if (typeof remainingCredits === 'number' && remainingCredits <= 0) {
+      setIsCreditModalOpen(true);
+      return;
+    }
+
     setIsLoading(true);
     setTestResult(null);
     const startTime = performance.now();
@@ -185,8 +192,7 @@ export default function EndpointPage({ endpoint }) {
       const total = Math.round(endTime - startTime);
       const contentType = response.headers.get("content-type");
       const responseData = contentType?.includes("application/json") ? await response.json() : await response.text();
-      const responseHeaders = Array.from(response.headers.entries()).map(([key, value]) => ({ key, value }));
-
+      
       setTestResult({
         status: response.status,
         statusText: response.statusText,
@@ -232,6 +238,14 @@ export default function EndpointPage({ endpoint }) {
 
   return (
     <div className="space-y-6 h-full flex flex-col">
+      <UpgradeModal
+        isOpen={isCreditModalOpen}
+        onClose={() => setIsCreditModalOpen(false)}
+        title="You're Out of Credits"
+        message="Your API call was blocked because you have no credits left. Please add more to continue testing."
+        buttonText="Add More Credits"
+      />
+
       <header className="flex-shrink-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
@@ -273,7 +287,7 @@ export default function EndpointPage({ endpoint }) {
         <section className="bg-card border rounded-lg flex flex-col min-h-[400px] lg:min-h-0 overflow-hidden">
           <div className={`border-b border-border flex-shrink-0 ${isEditing ? "bg-accent/5" : ""}`}>
             <nav className="flex space-x-1 -mb-px px-2 overflow-x-auto">
-              {requestTabs.map((tab) => (
+              {["Parameters", "Headers", "Authorization", "Body"].map((tab) => (
                 <TabButton key={tab} label={tab} isActive={activeRequestTab === tab} onClick={() => setActiveRequestTab(tab)}/>
               ))}
             </nav>
