@@ -750,7 +750,8 @@ export default function ApiAnalytics() {
   }, [logs, userHash]);
 
   const planToStripeCheckoutLinkUrl = useMemo(() => ({
-      plan_pro: "https://buy.stripe.com/7sY4gzap184O1pCbyR7ok03",
+      // plan_pro: "https://buy.stripe.com/7sY4gzap184O1pCbyR7ok03",
+      plan_pro: "https://buy.stripe.com/8x2eVdeFh0Cm9W87iB7ok04",
       plan_growth: "https://buy.stripe.com/7sY5kDeFhacWfgs5at7ok02",
       plan_ultra: "https://buy.stripe.com/fZu28rap10Cm3xK6ex7ok01",
     }), []);

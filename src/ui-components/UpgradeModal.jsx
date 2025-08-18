@@ -10,7 +10,7 @@ export default function UpgradeModal({ isOpen, onClose, title, message, buttonTe
 
   const handleUpgradeClick = () => {
     onClose();
-    navigate('/billing');
+    navigate('/dashboard');
   };
 
   return (
