@@ -17,6 +17,9 @@ import {
   XCircle,
   Eye,
   EyeOff,
+  Key,
+  Copy,
+  Check,
 } from "lucide-react";
 import { updateUserProfile } from "../../auth/authSlice";
 import apiRequest from "../../utils/apiRequest";
@@ -124,11 +127,14 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.auth.userInfo);
   const token = useSelector((state) => state.auth.userToken);
+  const Hash = useSelector((state) => state.auth.userInfo?.profile?.client?.[0]?.hash);
 
   const [userData, setUserData] = useState({});
   const [originalUserData, setOriginalUserData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showHash, setShowHash] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -157,6 +163,17 @@ const ProfilePage = () => {
   const handleCancelClick = () => {
     setUserData(originalUserData);
     setIsEditing(false);
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(Hash);
+      setCopied(true);
+      toast.success("Hash copied to clipboard!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error("Failed to copy hash");
+    }
   };
 
   const handleProfileSave = async (e) => {
@@ -214,7 +231,7 @@ const ProfilePage = () => {
         </p>
       </motion.header>
 
-      <div className="grid max-w-5xl grid-cols-1 gap-8 mx-auto lg:grid-cols-3">
+      <div className="grid max-w-5xl grid-cols-1 gap-8 lg:gap-5 mx-auto lg:grid-cols-3">
         <motion.div variants={itemVariants} className="lg:col-span-1">
           <div className="p-6 text-center bg-white border border-slate-200 rounded-xl shadow-sm">
             <div className="relative flex items-center justify-center w-32 h-32 mx-auto bg-[#F43F5E]/10 rounded-full ring-4 ring-white/80">
@@ -407,6 +424,57 @@ const ProfilePage = () => {
               </Form>
             )}
           </Formik>
+
+          {Hash && (
+            <motion.div variants={itemVariants} className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm transition-all duration-300 hover:shadow-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-lg">
+                  <Key className="w-5 h-5 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">API Authentication Hash</h3>
+                  <p className="text-sm text-slate-500">Your unique authentication token for API requests</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        X-auth-token
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[12.5px] bg-white px-3 py-2 border border-slate-300 rounded-md flex-1">
+                          {showHash ? Hash : "••••••••••••••••••••••••••••••••"}
+                        </span>
+                        <button
+                          onClick={copyToClipboard}
+                          className="flex items-center justify-center w-9 h-9 text-green-600 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 transition-colors"
+                          aria-label="Copy hash to clipboard"
+                        >
+                          {copied ? <Check className="w-5 h-5" /> : <Copy className="w-4 h-4" />}
+                        </button>
+                        <button
+                          onClick={() => setShowHash(!showHash)}
+                          className="flex items-center justify-center w-9 h-9 text-purple-600 bg-purple-50 border border-purple-200 rounded-md hover:bg-purple-100 transition-colors"
+                          aria-label={showHash ? "Hide hash" : "Show hash"}
+                        >
+                          {showHash ? <EyeOff className="w-5 h-5" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-xs text-slate-500 space-y-1">
+                  <p>• This token is automatically included in your API requests</p>
+                  <p>• Keep this token secure and do not share it with others</p>
+                  <p>• You can copy this value to use in external API testing tools</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </motion.div>

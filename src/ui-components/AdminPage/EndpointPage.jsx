@@ -40,6 +40,53 @@ const ParameterRow = ({paramKey, value, isEditing, onValueChange, placeholder, d
   </div>
 );
 
+const HeaderRow = ({header, index, isEditing, onKeyChange, onValueChange, onRemove}) => (
+  <div className="grid grid-cols-1 md:grid-cols-4 items-start gap-x-4 gap-y-2 py-3">
+    <div className="font-mono text-sm text-foreground">
+      {isEditing ? (
+        <input 
+          type="text" 
+          value={header.key || ""} 
+          onChange={(e) => onKeyChange(e.target.value)}
+          placeholder="Header name"
+          className="w-full bg-background py-2 px-3 text-foreground font-mono text-sm border border-accent rounded-md focus:outline-none focus:ring-1 focus:ring-accent"
+        />
+      ) : (
+        <span>{header.key}</span>
+      )}
+    </div>
+    <div className="md:col-span-2">
+      {isEditing ? (
+        <input 
+          type="text" 
+          value={header.value || ""} 
+          onChange={(e) => onValueChange(e.target.value)}
+          placeholder="Header value"
+          className="w-full bg-background py-2 px-3 text-foreground font-mono text-sm border border-accent rounded-md focus:outline-none focus:ring-1 focus:ring-accent"
+        />
+      ) : (
+        <input 
+          type="text" 
+          value={header.value || ""} 
+          readOnly
+          className="w-full bg-background py-2 px-3 text-foreground font-mono text-sm border border-border rounded-md cursor-default"
+        />
+      )}
+    </div>
+    {isEditing && (
+      <div className="flex justify-end">
+        <button
+          onClick={() => onRemove(index)}
+          className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+          aria-label="Remove header"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+    )}
+  </div>
+);
+
 const SubTab = ({ label, isActive, onClick }) => (
   <button onClick={onClick} className={`px-3 py-1 text-sm rounded-md ${isActive ? "bg-accent/10 text-accent font-semibold" : "text-muted-foreground hover:bg-footer-bg"}`}>
     {label}
@@ -134,16 +181,26 @@ export default function EndpointPage({ endpoint }) {
 
   useEffect(() => {
     if (endpoint) {
+      const defaultHeaders = JSON.parse(JSON.stringify(endpoint.headers || []));
+      
+      // Add X-auth-token header if it doesn't exist and we have a hash
+      if (Hash && !defaultHeaders.find(h => h.key.toLowerCase() === 'x-auth-token')) {
+        defaultHeaders.push({
+          key: 'X-auth-token',
+          value: Hash
+        });
+      }
+      
       setEditData({
         params: JSON.parse(JSON.stringify(endpoint.params || [])),
-        headers: JSON.parse(JSON.stringify(endpoint.headers || [])),
+        headers: defaultHeaders,
         body: endpoint.body || "",
       });
       setIsEditing(false);
       setTestResult(null);
       setActiveRequestTab(endpoint.params?.length > 0 ? "Parameters" : "Body");
     }
-  }, [endpoint]);
+  }, [endpoint, Hash]);
 
   const handleTestEndpoint = async () => {
     if (typeof remainingCredits === 'number' && remainingCredits <= 0) {
@@ -234,6 +291,28 @@ export default function EndpointPage({ endpoint }) {
     setEditData((prev) => ({ ...prev, headers }));
   };
 
+  const addHeader = () => {
+    const newHeaders = [...editData.headers, { key: "", value: "" }];
+    setEditData((prev) => ({ ...prev, headers: newHeaders }));
+  };
+
+  const removeHeader = (index) => {
+    const newHeaders = editData.headers.filter((_, i) => i !== index);
+    setEditData((prev) => ({ ...prev, headers: newHeaders }));
+  };
+
+  const handleHeaderKeyChange = (index, value) => {
+    const updated = [...editData.headers];
+    updated[index].key = value;
+    setEditData((prev) => ({ ...prev, headers: updated }));
+  };
+
+  const handleHeaderValueChange = (index, value) => {
+    const updated = [...editData.headers];
+    updated[index].value = value;
+    setEditData((prev) => ({ ...prev, headers: updated }));
+  };
+
   if (!endpoint) return null;
 
   return (
@@ -301,13 +380,35 @@ export default function EndpointPage({ endpoint }) {
                 </div>
               ) : ( <EmptyStateMessage message="This endpoint has no parameters." />)
             )}
-            {activeRequestTab === "Headers" && (editData.headers?.length > 0 ? (
+            {activeRequestTab === "Headers" && (
+              <div className="space-y-4">
                 <div className="divide-y divide-border -my-3">
-                  {editData.headers.map((h, i) => (
-                    <ParameterRow key={i} paramKey={h.key} value={h.value} isEditing={isEditing} onValueChange={(e) => handleEditChange("headers", i, "value", e.target.value)}/>
-                  ))}
+                  {editData.headers?.length > 0 ? (
+                    editData.headers.map((h, i) => (
+                      <HeaderRow 
+                        key={i} 
+                        header={h} 
+                        index={i}
+                        isEditing={isEditing} 
+                        onKeyChange={(value) => handleHeaderKeyChange(i, value)}
+                        onValueChange={(value) => handleHeaderValueChange(i, value)}
+                        onRemove={removeHeader}
+                      />
+                    ))
+                  ) : (
+                    <EmptyStateMessage message="No headers are defined for this request." />
+                  )}
                 </div>
-              ) : ( <EmptyStateMessage message="No headers are defined for this request." />)
+                {isEditing && (
+                  <button
+                    onClick={addHeader}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-accent bg-accent/10 rounded-md hover:bg-accent/20 transition-colors"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Add Header
+                  </button>
+                )}
+              </div>
             )}
             {activeRequestTab === "Authorization" && (
               <div className="space-y-2 text-foreground">
