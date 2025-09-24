@@ -216,7 +216,6 @@ export default function EndpointPage({ endpoint }) {
       editData.headers.map((h) => [h.key, h.value])
     );
 
-    if (Hash) headers['x-auth-token'] = Hash;
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     let urlTemplate = endpoint.url;
