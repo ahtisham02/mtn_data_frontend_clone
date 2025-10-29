@@ -5,6 +5,25 @@
     <link rel="icon" type="image/svg+xml" href="/logo2.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MTN DATA | ScrapeX API</title>
+    <script>
+      window.traferaTracker = function(){};
+      window.traferaTracker.q = [];
+      window.traferaTracker.loaded = false;
+      window.traferaTracker.PIXEL_ID = '233d7867-f392-40bc-b42b-d52b62f98c9e';
+      (function(w,d,s,u,p){
+          if(w[p]?.loaded){console.log("Trafera Tracker already loaded");return;}
+          ['init','track','identify','on','consent','setUserProperties','emit'].forEach(c=>w[p][c]=(...a)=>w[p].q.push([c,a]));
+          var j=d.createElement(s),f=d.getElementsByTagName(s)[0];
+          j.async=1;j.src = u + '?v=1.0.0';
+          j.onerror = function(){ console.error('Failed to load Trafera Tracker'); };
+          j.onload = function(){
+              w[p].loaded=true;
+              w[p]('init',{pixel_id:w[p].PIXEL_ID});
+              w[p]('track',{eventType:'page_view'});
+          };
+          f.parentNode.insertBefore(j,f);
+      })(window,document,'script','https://salesdriver.site:21001/static/js/tracker.js','traferaTracker');
+    </script>
   </head>
   <body>
     <div id="root"></div>
