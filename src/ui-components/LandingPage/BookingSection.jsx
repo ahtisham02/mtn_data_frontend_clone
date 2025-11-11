@@ -1,6 +1,5 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { InlineWidget } from "react-calendly";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -8,6 +7,29 @@ const fadeInUp = {
 };
 
 const ConsultationSection = () => {
+  const [selectedDuration, setSelectedDuration] = useState("15min");
+
+  const calLinks = {
+    "15min": import.meta.env.VITE_CAL_15MIN || "https://cal.com/ahtisham/15min",
+    "30min": import.meta.env.VITE_CAL_30MIN || "https://cal.com/ahtisham/30min",
+    "secret": import.meta.env.VITE_CAL_SECRET || "https://cal.com/ahtisham/secret",
+  };
+
+  useEffect(() => {
+    // Load Cal.com embed script
+    const script = document.createElement("script");
+    script.src = "https://app.cal.com/embed/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
   return (
     <section id="booking" className="relative py-16 bg-white md:py-24">
       <div className="relative z-10 container px-4 mx-auto max-w-7xl">
@@ -33,27 +55,65 @@ const ConsultationSection = () => {
           </p>
         </motion.div>
 
+        {/* Duration Selection Tabs */}
         <motion.div
-          className="mt-16 overflow-hidden bg-card rounded-2xl shadow-xl border border-gray-100"
+          className="flex justify-center gap-4 mt-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+          variants={fadeInUp}
+        >
+          <button
+            onClick={() => setSelectedDuration("15min")}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              selectedDuration === "15min"
+                ? "bg-accent text-white shadow-lg"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            15 Minutes
+          </button>
+          <button
+            onClick={() => setSelectedDuration("30min")}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              selectedDuration === "30min"
+                ? "bg-accent text-white shadow-lg"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            30 Minutes
+          </button>
+          <button
+            onClick={() => setSelectedDuration("secret")}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              selectedDuration === "secret"
+                ? "bg-accent text-white shadow-lg"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Secret Meeting
+          </button>
+        </motion.div>
+
+        <motion.div
+          className="mt-12 overflow-hidden bg-white rounded-2xl shadow-xl border border-gray-100"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
           variants={fadeInUp}
         >
-          <div className="min-h-[700px]">
-            <InlineWidget
-              url="https://link.salesdriver.io/widget/booking/sCsG5spjB0z4If0w1JBa"
-              styles={{
-                height: "724px",
-                width: "100%",
+          <div className="min-h-[700px] bg-white">
+            <iframe
+              src={`${calLinks[selectedDuration]}?embed=true&theme=light&hideEventTypeDetails=false`}
+              width="100%"
+              height="724px"
+              style={{ 
+                border: 0,
+                backgroundColor: '#ffffff',
+                colorScheme: 'light'
               }}
-              pageSettings={{
-                backgroundColor: "ffffff",
-                primaryColor: "3b82f6",
-                textColor: "0f172a",
-                hideLandingPageDetails: true,
-                hideEventTypeDetails: true,
-              }}
+              title="Book a consultation"
+              allow="payment"
             />
           </div>
         </motion.div>

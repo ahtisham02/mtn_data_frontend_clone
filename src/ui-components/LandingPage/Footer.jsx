@@ -82,11 +82,11 @@ const Footer = () => {
                 <span>+1 (877) 333-5540</span>
               </a>
               <a
-                href="mailto:info@salesdriver.io"
+                href="mailto:admin@mtndata.com"
                 className="flex items-center gap-3 transition-colors hover:text-accent"
               >
                 <Mail size={18} className="text-accent" />
-                <span>info@salesdriver.io</span>
+                <span>admin@mtndata.com</span>
               </a>
               <p className="flex items-center gap-3">
                 <MapPin size={18} className="flex-shrink-0 text-accent" />
