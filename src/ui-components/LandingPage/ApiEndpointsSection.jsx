@@ -18,8 +18,8 @@ const endpoints = [
     code: `{
   "status": "success",
   "data": {
-    "fullName": "Aneeq Khurram",
-    "headline": "Full-Stack Web Developer",
+    "fullName": "John Doe",
+    "headline": "Senior Software Engineer",
     "connections": 3392
   }
 }
