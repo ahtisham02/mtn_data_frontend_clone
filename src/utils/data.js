@@ -100,7 +100,7 @@ export const collections = [
           details: "This endpoint is open and does not require an API key.",
         },
         body: JSON.stringify(
-          { linkedin_url: "https://linkedin.com/in/johndoe" },
+          { linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -126,7 +126,7 @@ export const collections = [
           details: "This endpoint is open and does not require an API key.",
         },
         body: JSON.stringify(
-          { linkedin_urls: ["https://linkedin.com/in/johndoe"] },
+          { linkedin_urls: ["https://www.linkedin.com/in/shannon-willett-131a027/"] },
           null,
           2
         ),
@@ -151,13 +151,13 @@ export const collections = [
           type: "None",
           details: "This endpoint is open and does not require an API key.",
         },
-        body: JSON.stringify({ company: "apple.com" }, null, 2),
+        body: JSON.stringify({ company: "peacocktv.com" }, null, 2),
         requestSchema: [
           {
             field: "company",
             type: "string (domain)",
             required: true,
-            description: 'The domain of the company (e.g., "apple.com").',
+            description: 'The domain of the company (e.g., "peacocktv.com").',
           },
         ],
         response: {},
@@ -174,7 +174,7 @@ export const collections = [
           details: "This endpoint is open and does not require an API key.",
         },
         body: JSON.stringify(
-          { company: "google.com", full_name: "John Doe" },
+          { company: "netflix.com", full_name: "Shannon Willett" },
           null,
           2
         ),
@@ -206,7 +206,7 @@ export const collections = [
           details: "This endpoint is open and does not require an API key.",
         },
         body: JSON.stringify(
-          { company: "google.com", facetValue: 1, seniority: 0 },
+          { company: "netflix.com", facetValue: 1, seniority: 0 },
           null,
           2
         ),
@@ -244,7 +244,7 @@ export const collections = [
           details: "This endpoint is open and does not require an API key.",
         },
         body: JSON.stringify(
-          { company: "google.com", facetValue: 1, seniority: 0 },
+          { company: "netflix.com", facetValue: 1, seniority: 0 },
           null,
           2
         ),
@@ -282,7 +282,7 @@ export const collections = [
           details: "This endpoint is open and does not require an API key.",
         },
         body: JSON.stringify(
-          { companies: ["google.com"], facetValue: 1, seniority: 0 },
+          { companies: ["netflix.com"], facetValue: 1, seniority: 0 },
           null,
           2
         ),
@@ -323,7 +323,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { profile_link: "https://www.linkedin.com/in/johndoe/" },
+          { profile_link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -346,7 +346,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { profile_link: "https://www.linkedin.com/in/johndoe/" },
+          { profile_link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -369,7 +369,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { profile_link: "https://www.linkedin.com/in/johndoe/" },
+          { profile_link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -399,7 +399,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             questions: [
               "What is the name of the person?",
               "What is the current company of the person?",
@@ -441,7 +441,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             linkType: "PERSON",
           },
           null,
@@ -473,7 +473,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             linkType: "PERSON",
           },
           null,
@@ -505,7 +505,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             linkType: "PERSON",
           },
           null,
@@ -537,7 +537,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             linkType: "PERSON",
           },
           null,
@@ -568,7 +568,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { linkedin_url: "https://www.linkedin.com/in/johndoe/" },
+          { linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -615,8 +615,8 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            from_profile_url: "https://www.linkedin.com/in/johndoe/",
-            to_profile_url: "https://www.linkedin.com/in/johndoe/",
+            from_profile_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
+            to_profile_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             subject: "Write a connection message",
             details: "Highlight relevant industry experience",
           },
@@ -661,7 +661,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             leadTitle: "Software Engineer",
           },
           null,
@@ -693,7 +693,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             linkType: "PERSON",
           },
           null,
@@ -725,9 +725,9 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            own_linkedin_url: "https://www.linkedin.com/in/johndoe/",
+            own_linkedin_url: "https://www.linkedin.com/in/shannon-willett-131a027/",
             competitor_linkedin_url:
-              "https://www.linkedin.com/in/johndoe/",
+              "https://www.linkedin.com/in/shannon-willett-131a027/",
             linkType: "PERSON",
           },
           null,
@@ -827,7 +827,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -852,8 +852,8 @@ export const collections = [
         body: JSON.stringify(
           {
             links: [
-              "https://linkedin.in/company/apple",
-              "https://linkedin.in/company/google",
+              "https://www.linkedin.com/company/peacock-tv/",
+              "https://www.linkedin.com/company/netflix/",
             ],
           },
           null,
@@ -900,7 +900,7 @@ export const collections = [
         params: [],
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
-        body: JSON.stringify({ domain: "google.com" }, null, 2),
+        body: JSON.stringify({ domain: "netflix.com" }, null, 2),
         requestSchema: [
           {
             field: "domain",
@@ -919,7 +919,7 @@ export const collections = [
         params: [],
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
-        body: JSON.stringify({ domains: ["google.com", "apple.com"] }, null, 2),
+        body: JSON.stringify({ domains: ["netflix.com", "peacocktv.com"] }, null, 2),
         requestSchema: [
           {
             field: "domains",
@@ -939,7 +939,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -975,7 +975,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -1011,7 +1011,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -1083,7 +1083,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -1105,7 +1105,7 @@ export const collections = [
         params: [],
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
-        body: JSON.stringify({ domain: "google.com" }, null, 2),
+        body: JSON.stringify({ domain: "netflix.com" }, null, 2),
         requestSchema: [
           {
             field: "domain",
@@ -1125,7 +1125,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -1148,7 +1148,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -1171,7 +1171,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.in/company/apple" },
+          { link: "https://www.linkedin.com/company/peacock-tv/" },
           null,
           2
         ),
@@ -1407,7 +1407,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { linkedinUrl: "https://www.linkedin.com/in/johndoe/" },
+          { linkedinUrl: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1436,7 +1436,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1461,7 +1461,7 @@ export const collections = [
         body: JSON.stringify(
           {
             links: [
-              "https://linkedin.com/in/johndoe",
+              "https://www.linkedin.com/in/shannon-willett-131a027/",
               "https://linkedin.com/in/debosche-user",
             ],
           },
@@ -1512,7 +1512,7 @@ export const collections = [
         body: JSON.stringify(
           {
             links: [
-              "https://linkedin.com/in/johndoe",
+              "https://www.linkedin.com/in/shannon-willett-131a027/",
               "https://linkedin.com/in/debosche-user",
             ],
           },
@@ -1538,7 +1538,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1561,7 +1561,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1584,7 +1584,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1607,7 +1607,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1630,7 +1630,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1653,7 +1653,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1676,7 +1676,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1699,7 +1699,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1722,7 +1722,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1745,7 +1745,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1768,7 +1768,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1804,7 +1804,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1852,7 +1852,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1875,7 +1875,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { link: "https://linkedin.com/in/johndoe" },
+          { link: "https://www.linkedin.com/in/shannon-willett-131a027/" },
           null,
           2
         ),
@@ -1904,7 +1904,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { employeeName: "John Doe", company: "apple.com" },
+          { employeeName: "Shannon Willett", company: "peacocktv.com" },
           null,
           2
         ),
@@ -1933,7 +1933,7 @@ export const collections = [
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
-          { employeeName: "John Doe", company: "apple.com" },
+          { employeeName: "Shannon Willett", company: "peacocktv.com" },
           null,
           2
         ),
@@ -1961,7 +1961,7 @@ export const collections = [
         params: [],
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
-        body: JSON.stringify({ company: "apple.com" }, null, 2),
+        body: JSON.stringify({ company: "peacocktv.com" }, null, 2),
         requestSchema: [
           {
             field: "company",
@@ -1980,7 +1980,7 @@ export const collections = [
         params: [],
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
-        body: JSON.stringify({ company: "apple.com" }, null, 2),
+        body: JSON.stringify({ company: "peacocktv.com" }, null, 2),
         requestSchema: [
           {
             field: "company",
@@ -2285,7 +2285,7 @@ export const collections = [
         body: JSON.stringify(
           {
             searchUrl:
-              "https://www.linkedin.com/search/results/content/?keywords=apple",
+              "https://www.linkedin.com/search/results/content/?keywords=peacock",
           },
           null,
           2
@@ -2353,7 +2353,7 @@ export const collections = [
         ],
         headers: [{ key: "Content-Type", value: "application/json" }],
         auth: { type: "None", details: "This endpoint is open." },
-        body: JSON.stringify({ keyword: "John Doe" }, null, 2),
+        body: JSON.stringify({ keyword: "Shannon Willett" }, null, 2),
         requestSchema: [
           {
             field: "keyword",
@@ -2617,7 +2617,7 @@ export const collections = [
         auth: { type: "None", details: "This endpoint is open." },
         body: JSON.stringify(
           {
-            keyword: "John Doe",
+            keyword: "Shannon Willett",
             titleText: "Senior Engineer",
             companyText: "Google",
             firstName: "John",

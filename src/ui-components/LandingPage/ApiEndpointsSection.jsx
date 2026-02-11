@@ -18,9 +18,9 @@ const endpoints = [
     code: `{
   "status": "success",
   "data": {
-    "fullName": "John Doe",
-    "headline": "Senior Software Engineer",
-    "connections": 3392
+    "fullName": "Shannon Willett",
+    "headline": "Chief Marketing Officer at Peacock",
+    "connections": 5432
   }
 }
 `,
@@ -35,12 +35,12 @@ const endpoints = [
       "Retrieve contact information and skills",
     ],
     code: `{
-  "query": { "name": "John Doe", "company": "Acme Corp" },
+  "query": { "name": "Shannon Willett", "company": "Peacock" },
   "results": [
     {
-      "full_name": "Johnathan Doe",
-      "headline": "Senior Software Engineer at Acme Corp",
-      "location": "San Francisco, California"
+      "full_name": "Shannon Willett",
+      "headline": "Chief Marketing Officer at Peacock",
+      "location": "New York, NY"
     }
   ]
 }`,
@@ -55,12 +55,12 @@ const endpoints = [
       "Access a list of key decision-makers",
     ],
     code: `{
-  "query": { "domain": "acme.com" },
+  "query": { "domain": "peacocktv.com" },
   "result": {
-    "name": "Acme Corporation",
-    "description": "A leading provider of innovative solutions...",
-    "industry": "Information Technology",
-    "employee_count": 5230
+    "name": "Peacock",
+    "description": "The streaming service from NBCUniversal...",
+    "industry": "Entertainment",
+    "employee_count": 2500
   }
 }`,
   },
@@ -74,12 +74,12 @@ const endpoints = [
       "Retrieve full job descriptions",
     ],
     code: `{
-  "query": { "title": "Product Manager", "region": "USA" },
+  "query": { "title": "Marketing Manager", "region": "USA" },
   "jobs": [
     {
       "job_id": "987654",
-      "title": "Senior Product Manager, AI",
-      "company": "Tech Innovations Inc.",
+      "title": "Senior Marketing Manager",
+      "company": "Peacock",
       "location": "New York, NY"
     }
   ]
