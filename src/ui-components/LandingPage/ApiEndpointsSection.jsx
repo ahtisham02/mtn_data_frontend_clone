@@ -18,8 +18,9 @@ const endpoints = [
     code: `{
   "status": "success",
   "data": {
-    "fullName": "Shannon Willett",
-    "headline": "Chief Marketing Officer at Peacock",
+    "fullName": "Phillip Williams",
+    "headline": "Marketing Executive at Apple",
+    "company": "apple.com",
     "connections": 5432
   }
 }
@@ -35,12 +36,13 @@ const endpoints = [
       "Retrieve contact information and skills",
     ],
     code: `{
-  "query": { "name": "Shannon Willett", "company": "Peacock" },
+  "query": { "name": "Phillip Williams", "company": "apple.com" },
   "results": [
     {
-      "full_name": "Shannon Willett",
-      "headline": "Chief Marketing Officer at Peacock",
-      "location": "New York, NY"
+      "full_name": "Phillip Williams",
+      "headline": "Marketing Executive at Apple",
+      "company": "apple.com",
+      "location": "Cupertino, CA"
     }
   ]
 }`,
@@ -55,12 +57,12 @@ const endpoints = [
       "Access a list of key decision-makers",
     ],
     code: `{
-  "query": { "domain": "peacocktv.com" },
+  "query": { "domain": "apple.com" },
   "result": {
-    "name": "Peacock",
-    "description": "The streaming service from NBCUniversal...",
-    "industry": "Entertainment",
-    "employee_count": 2500
+    "name": "Apple",
+    "description": "A global leader in consumer electronics, software, and services...",
+    "industry": "Technology",
+    "employee_count": 160000
   }
 }`,
   },
@@ -79,8 +81,8 @@ const endpoints = [
     {
       "job_id": "987654",
       "title": "Senior Marketing Manager",
-      "company": "Peacock",
-      "location": "New York, NY"
+      "company": "Apple",
+      "location": "Cupertino, CA"
     }
   ]
 }`,
