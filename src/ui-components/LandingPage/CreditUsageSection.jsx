@@ -35,7 +35,7 @@ const pricingTiers = [
 
 const TokenSystemSection = () => {
   return (
-    <section className="py-16 bg-white text-black md:py-24">
+    <section id="credit-usage" className="py-16 bg-white text-black md:py-24">
       <div className="container px-4 mx-auto max-w-7xl">
         <motion.div
           className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2"
