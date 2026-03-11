@@ -163,9 +163,8 @@ const ResponseCodesPieChart = ({ data }) => {
         {data.map((item, index) => (
           <li
             key={item.name}
-            className={`flex items-center gap-3 text-sm transition-opacity ${
-              activeIndex === index ? "opacity-100" : "opacity-60"
-            }`}
+            className={`flex items-center gap-3 text-sm transition-opacity ${activeIndex === index ? "opacity-100" : "opacity-60"
+              }`}
             onMouseEnter={() => setActiveIndex(index)}
           >
             <span
@@ -400,11 +399,10 @@ const ApiCallVolumeChart = ({ data }) => (
 
 const StatusIndicator = ({ operational }) => (
   <span
-    className={`flex items-center gap-1.5 ${
-      operational
-        ? "bg-green-500/10 text-green-400"
-        : "bg-red-500/10 text-red-400"
-    } text-xs font-medium px-2.5 py-1 rounded-full`}
+    className={`flex items-center gap-1.5 ${operational
+      ? "bg-green-500/10 text-green-400"
+      : "bg-red-500/10 text-red-400"
+      } text-xs font-medium px-2.5 py-1 rounded-full`}
   >
     {operational ? (
       <>
@@ -425,11 +423,10 @@ const StatCard = ({ icon, title, value, change, isPositive }) => {
   return (
     <div className="p-4 bg-card border border-border rounded-lg flex items-start gap-4">
       <div
-        className={`p-2 rounded-lg ${
-          isPositive
-            ? "bg-green-500/10 text-green-500"
-            : "bg-red-500/10 text-red-500"
-        }`}
+        className={`p-2 rounded-lg ${isPositive
+          ? "bg-green-500/10 text-green-500"
+          : "bg-red-500/10 text-red-500"
+          }`}
       >
         <IconComponent className="h-5 w-5" />
       </div>
@@ -437,9 +434,8 @@ const StatCard = ({ icon, title, value, change, isPositive }) => {
         <p className="text-sm text-muted-foreground">{title}</p>
         <p className="text-2xl font-bold mt-1">{value}</p>
         <p
-          className={`text-xs mt-1 ${
-            isPositive ? "text-green-500" : "text-red-500"
-          }`}
+          className={`text-xs mt-1 ${isPositive ? "text-green-500" : "text-red-500"
+            }`}
         >
           {isPositive ? (
             <ArrowUp className="inline h-3 w-3" />
@@ -484,11 +480,10 @@ const PackageCard = ({ pkg, onCtaClick, isLoading, isCurrentPlan }) => {
   const isCustomPlan = pkg.price === "Custom";
   return (
     <div
-      className={`flex flex-col h-full p-6 transition-all duration-300 bg-white border rounded-2xl ${
-        isCurrentPlan
-          ? "border-accent shadow-accent/20 shadow-lg"
-          : "border-border hover:shadow-2xl hover:-translate-y-2"
-      }`}
+      className={`flex flex-col h-full p-6 transition-all duration-300 bg-white border rounded-2xl ${isCurrentPlan
+        ? "border-accent shadow-accent/20 shadow-lg"
+        : "border-border hover:shadow-2xl hover:-translate-y-2"
+        }`}
     >
       {isCurrentPlan && (
         <div className="text-center py-1 px-4 bg-accent text-white text-xs font-bold rounded-full -mt-10 mx-auto mb-4">
@@ -624,19 +619,19 @@ export default function ApiAnalytics() {
 
     const now = new Date();
     const daysInRange = { '7d': 7, '30d': 30, '90d': 90 }[timeRange];
-    
+
     const cutoffDate = new Date(now);
     cutoffDate.setDate(now.getDate() - daysInRange);
     cutoffDate.setHours(0, 0, 0, 0);
 
     return callVolumeData
-        .map(item => ({ ...item, dateObj: new Date(item.date) }))
-        .filter(item => item.dateObj >= cutoffDate)
-        .sort((a, b) => a.dateObj - b.dateObj)
-        .map(item => ({
-            label: item.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-            value: item.count
-        }));
+      .map(item => ({ ...item, dateObj: new Date(item.date) }))
+      .filter(item => item.dateObj >= cutoffDate)
+      .sort((a, b) => a.dateObj - b.dateObj)
+      .map(item => ({
+        label: item.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        value: item.count
+      }));
   }, [callVolumeData, timeRange]);
 
   const dynamicData = useMemo(() => {
@@ -743,17 +738,17 @@ export default function ApiAnalytics() {
       { name: "200-500ms", requests: Math.round((latencyBaseDistribution[3] / totalDist) * logs.length) },
       { name: "> 500ms", requests: Math.round((latencyBaseDistribution[4] / totalDist) * logs.length) },
     ];
-    
+
     return {
-        stats, pieData, endpointUsage, latencyData, requestMethodsData,
+      stats, pieData, endpointUsage, latencyData, requestMethodsData,
     };
   }, [logs, userHash]);
 
   const planToStripeCheckoutLinkUrl = useMemo(() => ({
-      plan_pro: "https://buy.stripe.com/7sY4gzap184O1pCbyR7ok03",
-      plan_growth: "https://buy.stripe.com/7sY5kDeFhacWfgs5at7ok02",
-      plan_ultra: "https://buy.stripe.com/fZu28rap10Cm3xK6ex7ok01",
-    }), []);
+    plan_pro: "https://buy.stripe.com/4gM28rgNp3Oyeco9qJ7ok05",
+    plan_growth: "https://buy.stripe.com/fZubJ140Detc4BOcCV7ok06",
+    plan_ultra: "https://buy.stripe.com/8x228r8gTgBkecodGZ7ok07",
+  }), []);
 
   const handlePlanSelect = async (planId) => {
     const checkoutLinkUrl = planToStripeCheckoutLinkUrl[planId];
@@ -838,11 +833,10 @@ export default function ApiAnalytics() {
                     <button
                       key={range}
                       onClick={() => setTimeRange(range)}
-                      className={`text-xs px-3 py-1 rounded-full ${
-                        timeRange === range
-                          ? "bg-accent/10 text-accent"
-                          : "bg-card text-muted-foreground hover:bg-accent/5"
-                      }`}
+                      className={`text-xs px-3 py-1 rounded-full ${timeRange === range
+                        ? "bg-accent/10 text-accent"
+                        : "bg-card text-muted-foreground hover:bg-accent/5"
+                        }`}
                     >
                       {range}
                     </button>
@@ -851,11 +845,11 @@ export default function ApiAnalytics() {
               </div>
               {callVolumeLoading ? (
                 <div className="w-full h-80 flex items-center justify-center">
-                    <Loader className="animate-spin h-8 w-8 text-accent" />
+                  <Loader className="animate-spin h-8 w-8 text-accent" />
                 </div>
               ) : callVolumeError ? (
                 <div className="w-full h-80 flex items-center justify-center text-red-500">
-                    <p>Could not load chart data.</p>
+                  <p>Could not load chart data.</p>
                 </div>
               ) : (
                 <ApiCallVolumeChart data={processedApiCallVolume} />

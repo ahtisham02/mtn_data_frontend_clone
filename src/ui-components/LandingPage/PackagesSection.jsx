@@ -172,9 +172,9 @@ const PackagesSection = () => {
 
   const planToStripeCheckoutLinkUrl = useMemo(
     () => ({
-      plan_pro: "https://buy.stripe.com/7sY4gzap184O1pCbyR7ok03",
-      plan_growth: "https://buy.stripe.com/7sY5kDeFhacWfgs5at7ok02",
-      plan_ultra: "https://buy.stripe.com/fZu28rap10Cm3xK6ex7ok01",
+      plan_pro: "https://buy.stripe.com/4gM28rgNp3Oyeco9qJ7ok05",
+      plan_growth: "https://buy.stripe.com/fZubJ140Detc4BOcCV7ok06",
+      plan_ultra: "https://buy.stripe.com/8x228r8gTgBkecodGZ7ok07",
     }),
     []
   );
