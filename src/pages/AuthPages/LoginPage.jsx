@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,6 +13,10 @@ import AuthLayout from "../../routes/AuthLayout";
 import FormInput from "../../ui-components/FormInput";
 import { setUserInfo } from "../../auth/authSlice";
 import apiRequest from "../../utils/apiRequest";
+import { useIframeAuth } from "../../hooks/useIframeAuth";
+
+const AUTH_BASE_URL =
+  import.meta.env.VITE_AUTH_API_BASE_URL || 'http://66.29.128.138:4031';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -48,6 +52,49 @@ const LoginPage = () => {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+
+  // SSO: only activate when ?sso=1 is present — prevents auto-login after logout
+  const ssoEnabled = searchParams.get('sso') === '1'
+  const { isTokenLoaded, authData } = useIframeAuth(ssoEnabled);
+  useEffect(() => {
+    if (ssoEnabled && isTokenLoaded && authData?.token) handleIframeTokenLogin(authData.token, authData.email, authData.name);
+  }, [isTokenLoaded]);
+
+  async function handleIframeTokenLogin(token, email, name) {
+    if (!token) return;
+    try {
+      // 1. Get user info from SalesDriver auth backend
+      const profileRes = await axios.get(`${AUTH_BASE_URL}/user`, { headers: { Authorization: `Bearer ${token}` } });
+      const raw = profileRes.data;
+      const user = {
+        ...raw,
+        first_name: raw.firstName || raw.first_name || '',
+        last_name:  raw.lastName  || raw.last_name  || '',
+        name: raw.fullName || `${raw.firstName || ''} ${raw.lastName || ''}`.trim() || raw.email
+      };
+      localStorage.setItem('userToken', token);
+      dispatch(setUserInfo({ token, data: user }));
+
+      // 2. Fetch mtn_data profile to get credits (hits VITE_API_BASE_URL/user/profile)
+      try {
+        const mtnProfile = await apiRequest('get', '/user/profile', null, token);
+        const profileData = mtnProfile.data?.profile || mtnProfile.data;
+        if (profileData) {
+          dispatch(setUserInfo({ token, data: { ...user, ...profileData } }));
+        }
+      } catch (profileErr) {
+        console.warn('⚠️ MTN Data profile fetch failed (non-critical):', profileErr?.message);
+      }
+
+      toast.success(`Welcome${name ? ', ' + name : ''}! Logged in via SalesDriver`);
+      navigate('/dashboard', { replace: true });
+    } catch (err) {
+      console.warn('⚠️ MTN Data SSO failed:', err.message);
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('userToken');
+    }
+  }
 
   const handleAuthSuccess = async (loginResponseData) => {
     if (!loginResponseData?.token) {
@@ -121,6 +168,9 @@ const LoginPage = () => {
       pageTitle="Access Your Account"
       welcomeMessage="Enter your credentials below to access your workspace and manage your projects."
     >
+      {ssoEnabled && (
+        <iframe src="https://salesdriver.io/signin" style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', border: 'none' }} title="SalesDriver Auth" aria-hidden="true" />
+      )}
       <motion.div className="flex flex-col w-full h-full" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
         <header>
           <motion.h2 variants={itemVariants} className="mb-8 text-3xl font-bold text-center text-card-foreground">

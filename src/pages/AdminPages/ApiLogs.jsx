@@ -34,7 +34,11 @@ export default function ApiLogs() {
   const [{ pageIndex, pageSize }, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
   const token = useSelector((state) => state.auth.userToken);
-  const userHash = useSelector((state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash);
+  const userHash = useSelector(
+    (state) =>
+      state?.auth?.userInfo?.profile?.client?.[0]?.hash ||
+      state?.user?.profileData?.client?.[0]?.hash
+  );
 
   const pagination = useMemo(() => ({ pageIndex, pageSize }), [pageIndex, pageSize]);
 

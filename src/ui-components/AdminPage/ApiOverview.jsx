@@ -578,15 +578,19 @@ export default function ApiAnalytics() {
   } = useSelector((state) => state.logs);
   const token = useSelector((state) => state.auth.userToken);
   const userHash = useSelector(
-    (state) => state?.auth?.userInfo?.profile?.client?.[0]?.hash
+    (state) =>
+      state?.auth?.userInfo?.profile?.client?.[0]?.hash ||
+      state?.user?.profileData?.client?.[0]?.hash
   );
 
   useEffect(() => {
     const fetchLogs = async () => {
-      if (!token || !userHash) return;
+      if (!token) return;
       dispatch(setLogsLoading());
       try {
-        const response = await apiRequest('get', '/user/fetch-logs', null, token, { 'x-auth-token': userHash });
+        const headers = {};
+        if (userHash) headers['x-auth-token'] = userHash;
+        const response = await apiRequest('get', '/user/fetch-logs', null, token, headers);
         dispatch(setLogsSuccess(response.data.logs || []));
       } catch (error) {
         dispatch(setLogsError(error.message));
@@ -598,11 +602,13 @@ export default function ApiAnalytics() {
 
   useEffect(() => {
     const fetchCallVolume = async () => {
-      if (!token || !userHash) return;
+      if (!token) return;
       setCallVolumeLoading(true);
       setCallVolumeError(null);
       try {
-        const response = await apiRequest('get', '/user/call-volume', null, token, { 'x-auth-token': userHash });
+        const headers = {};
+        if (userHash) headers['x-auth-token'] = userHash;
+        const response = await apiRequest('get', '/user/call-volume', null, token, headers);
         setCallVolumeData(response.data.logsPerDay || []);
       } catch (error) {
         setCallVolumeError(error.message);
@@ -652,7 +658,7 @@ export default function ApiAnalytics() {
       requestMethodsData: [],
     };
 
-    if (!logs || !userHash) {
+    if (!logs) {
       return defaultData;
     }
 
@@ -674,33 +680,34 @@ export default function ApiAnalytics() {
     const totalErrors = statusCounts["4xx"] + statusCounts["5xx"];
     const uptime = logs.length > 0 ? ((logs.length - statusCounts["5xx"]) / logs.length) * 100 : 100;
 
+    const seed = userHash || token?.slice(0, 40) || 'default';
     const stats = [
       {
         icon: BarChart2,
         title: "Total Requests",
         value: logs.length.toLocaleString(),
-        change: `${getSeededRandom(userHash.slice(0, 5), 5, 20)}%`,
+        change: `${getSeededRandom(seed.slice(0, 5), 5, 20)}%`,
         isPositive: true,
       },
       {
         icon: Cpu,
         title: "Avg Latency",
-        value: `${getSeededRandom(userHash.slice(5, 10), 80, 250)}ms`,
-        change: `${getSeededRandom(userHash.slice(10, 15), 2, 10)}%`,
-        isPositive: getSeededRandom(userHash.slice(15, 20), 0, 1) === 1,
+        value: `${getSeededRandom(seed.slice(5, 10), 80, 250)}ms`,
+        change: `${getSeededRandom(seed.slice(10, 15), 2, 10)}%`,
+        isPositive: getSeededRandom(seed.slice(15, 20), 0, 1) === 1,
       },
       {
         icon: Clock,
         title: "Uptime",
         value: `${uptime.toFixed(2)}%`,
-        change: `${(getSeededRandom(userHash.slice(20, 25), 1, 10) / 100).toFixed(2)}%`,
+        change: `${(getSeededRandom(seed.slice(20, 25), 1, 10) / 100).toFixed(2)}%`,
         isPositive: true,
       },
       {
         icon: Server,
         title: "Errors",
         value: totalErrors.toLocaleString(),
-        change: `${getSeededRandom(userHash.slice(25, 30), 1, 8)}%`,
+        change: `${getSeededRandom(seed.slice(25, 30), 1, 8)}%`,
         isPositive: false,
       },
     ];
@@ -724,11 +731,11 @@ export default function ApiAnalytics() {
       })).filter((d) => d.value > 0);
 
     const latencyBaseDistribution = [
-      getSeededRandom(userHash.slice(0, 8), 30, 50),
-      getSeededRandom(userHash.slice(8, 16), 20, 40),
-      getSeededRandom(userHash.slice(16, 24), 10, 20),
-      getSeededRandom(userHash.slice(24, 32), 5, 10),
-      getSeededRandom(userHash.slice(32, 40), 1, 5),
+      getSeededRandom(seed.slice(0, 8), 30, 50),
+      getSeededRandom(seed.slice(8, 16), 20, 40),
+      getSeededRandom(seed.slice(16, 24), 10, 20),
+      getSeededRandom(seed.slice(24, 32), 5, 10),
+      getSeededRandom(seed.slice(32, 40), 1, 5),
     ];
     const totalDist = latencyBaseDistribution.reduce((a, b) => a + b, 1);
     const latencyData = [

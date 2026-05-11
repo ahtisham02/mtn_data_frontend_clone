@@ -60,7 +60,11 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, closeSidebar }
   const navigate = useNavigate();
 
   const token = useSelector((state) => state.auth.userToken);
-  const Hash = useSelector((state) => state.auth.userInfo?.profile?.client?.[0]?.hash);
+  const Hash = useSelector(
+    (state) =>
+      state?.auth?.userInfo?.profile?.client?.[0]?.hash ||
+      state?.user?.profileData?.client?.[0]?.hash
+  );
   const creditsInfo = useSelector((state) => state.user.creditsInfo);
   const creditsStatus = useSelector((state) => state.user.status);
 

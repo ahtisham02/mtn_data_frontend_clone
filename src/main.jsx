@@ -10,11 +10,11 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "react-toastify/dist/ReactToastify.css";
+import SSOAuthProvider from "./components/SSOAuthProvider";
+import IframeMessageHandler from "./components/IframeMessageHandler";
 
 const intercomAppId = import.meta.env.VITE_INTERCOM_APP_ID;
 const googleAppId = import.meta.env.VITE_APP_GOOGLE_CLIENTID;
-
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -36,7 +36,11 @@ root.render(
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <BrowserRouter>
-              <MainRoutes />
+              {/* SSOAuthProvider must be inside Provider + BrowserRouter */}
+              <SSOAuthProvider>
+                <IframeMessageHandler />
+                <MainRoutes />
+              </SSOAuthProvider>
             </BrowserRouter>
           </PersistGate>
         </Provider>

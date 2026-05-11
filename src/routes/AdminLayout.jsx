@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import Intercom from '@intercom/messenger-js-sdk';
 
 import Header from '../ui-components/AdminPage/Header';
 import MainSidebar from '../ui-components/AdminPage/MainSidebar';
 import UpgradeModal from '../ui-components/UpgradeModal';
+import { fetchCredits, fetchProfile } from '../auth/userSlice';
 
 export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const intercomAppId = import.meta.env.VITE_INTERCOM_APP_ID;
+  const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasBeenDismissed, setHasBeenDismissed] = useState(false);
@@ -17,6 +19,15 @@ export default function AdminLayout() {
 
   const remainingCredits = useSelector((state) => state.user.creditsInfo?.remainingCredits);
   const status = useSelector((state) => state.user.status);
+  const token = useSelector((state) => state.auth.userToken);
+  const hash = useSelector((state) => state.auth.userInfo?.profile?.client?.[0]?.hash);
+
+  // ── On every page load: fetch profile (gets credits + hash) ──
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchProfile());
+    }
+  }, [token, dispatch]);
   
   useEffect(() => {
     if (status !== 'succeeded' || typeof remainingCredits !== 'number') {

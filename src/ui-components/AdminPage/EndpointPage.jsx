@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import ApiResponseViewer from "./ApiResponseViewer";
 import { removeUserInfo } from "../../auth/authSlice";
-import { fetchCredits } from "../../auth/userSlice";
+import { fetchCredits, fetchProfile } from "../../auth/userSlice";
 import UpgradeModal from "../UpgradeModal";
 
 const getMethodClass = (method) => {
@@ -175,7 +175,11 @@ export default function EndpointPage({ endpoint }) {
   const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   const remainingCredits = useSelector((state) => state.user.creditsInfo?.remainingCredits);
   
-  const Hash = useSelector((state) => state.auth.userInfo?.profile?.client?.[0]?.hash); 
+  const Hash = useSelector(
+    (state) =>
+      state?.auth?.userInfo?.profile?.client?.[0]?.hash ||
+      state?.user?.profileData?.client?.[0]?.hash
+  );
   const token = useSelector((state) => state.auth.userToken);
   const dispatch = useDispatch();
 
@@ -257,7 +261,8 @@ export default function EndpointPage({ endpoint }) {
         bodySize: new Blob([JSON.stringify(responseData)]).size,
         data: responseData,
       });
-      dispatch(fetchCredits());
+      // Refresh credits from profile API after every endpoint test
+      dispatch(fetchProfile());
     } catch (error) {
       const endTime = performance.now();
       setTestResult({
