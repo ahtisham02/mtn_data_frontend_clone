@@ -25,9 +25,12 @@ function SSOHandler() {
 
   // Polling fallback — sd_logout key set by SalesDriver iframe
   useEffect(() => {
+    console.log('[MTN Data] Logout polling started');
     const interval = setInterval(() => {
-      if (localStorage.getItem('sd_logout')) {
-        console.log('[MTN Data] sd_logout flag detected, logging out...');
+      const sdLogoutFlag = localStorage.getItem('sd_logout');
+      if (sdLogoutFlag) {
+        console.log('[MTN Data] sd_logout flag detected:', sdLogoutFlag);
+        console.log('[MTN Data] Clearing tokens and logging out...');
         localStorage.removeItem('sd_logout');
         localStorage.removeItem('access_token');
         localStorage.removeItem('userToken');
@@ -36,7 +39,10 @@ function SSOHandler() {
         navigate("/login", { replace: true });
       }
     }, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      console.log('[MTN Data] Logout polling stopped');
+      clearInterval(interval);
+    };
   }, [dispatch, navigate]);
 
   // SSO login — only when ?sso=1

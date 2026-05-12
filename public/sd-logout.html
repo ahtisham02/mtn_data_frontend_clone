@@ -6,19 +6,36 @@
   // Called by SalesDriver broadcastLogout via hidden iframe
   // Clears MTN Data session — SSOAuthProvider polling picks up sd_logout flag
 
-  console.log('[sd-logout] Clearing MTN Data session...');
+  console.log('[sd-logout] MTN Data logout page loaded');
+  console.log('[sd-logout] Current localStorage before clear:', Object.keys(localStorage));
 
   var keys = ['access_token', 'userToken', 'salesdriver_email', 'salesdriver_name',
               'sd_user_email', 'sd_user_name'];
-  keys.forEach(function(k) { try { localStorage.removeItem(k); } catch(e) {} });
+  keys.forEach(function(k) { 
+    try { 
+      if (localStorage.getItem(k)) {
+        console.log('[sd-logout] Removing key:', k);
+        localStorage.removeItem(k); 
+      }
+    } catch(e) {
+      console.error('[sd-logout] Error removing key:', k, e);
+    } 
+  });
 
   // Set sd_logout flag — SSOAuthProvider polls this every 1s
   try {
     localStorage.setItem('sd_logout', Date.now().toString());
-    setTimeout(function() { localStorage.removeItem('sd_logout'); }, 3000);
-  } catch(e) {}
+    console.log('[sd-logout] sd_logout flag set:', localStorage.getItem('sd_logout'));
+    setTimeout(function() { 
+      localStorage.removeItem('sd_logout'); 
+      console.log('[sd-logout] sd_logout flag removed after 3s');
+    }, 3000);
+  } catch(e) {
+    console.error('[sd-logout] Error setting sd_logout flag:', e);
+  }
 
   console.log('[sd-logout] MTN Data session cleared');
+  console.log('[sd-logout] Current localStorage after clear:', Object.keys(localStorage));
 </script>
 </body>
 </html>
