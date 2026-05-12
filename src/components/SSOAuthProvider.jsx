@@ -11,7 +11,7 @@ const API_BASE_URL  = import.meta.env.VITE_API_BASE_URL;
 function SSOHandler() {
   const location  = useLocation();
   const ssoEnabled = new URLSearchParams(location.search).get('sso') === '1';
-  const { isTokenLoaded, authData, loggedOut } = useIframeAuth(ssoEnabled);
+  const { isTokenLoaded, authData, loggedOut } = useIframeAuth(false); // Always listen for logout
   const dispatch  = useDispatch();
   const navigate  = useNavigate();
 
@@ -21,12 +21,13 @@ function SSOHandler() {
     dispatch(removeUserInfo());
     toast.info("Logged out from SalesDriver");
     navigate("/login", { replace: true });
-  }, [loggedOut]);
+  }, [loggedOut, dispatch, navigate]);
 
   // Polling fallback — sd_logout key set by SalesDriver iframe
   useEffect(() => {
     const interval = setInterval(() => {
       if (localStorage.getItem('sd_logout')) {
+        console.log('[MTN Data] sd_logout flag detected, logging out...');
         localStorage.removeItem('sd_logout');
         localStorage.removeItem('access_token');
         localStorage.removeItem('userToken');
@@ -66,7 +67,7 @@ function SSOHandler() {
         localStorage.removeItem("access_token");
         localStorage.removeItem("userToken");
       });
-  }, [isTokenLoaded]);
+  }, [ssoEnabled, isTokenLoaded, authData, dispatch, navigate]);
 
   return null;
 }
