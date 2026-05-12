@@ -56,9 +56,38 @@ const LoginPage = () => {
 
   // SSO: only activate when ?sso=1 is present — prevents auto-login after logout
   const ssoEnabled = searchParams.get('sso') === '1'
-  const { isTokenLoaded, authData } = useIframeAuth(ssoEnabled);
+
+  // ── Redirect-based SSO: check for sso_token in URL params ──
+  // SalesDriver's sso-relay.html redirects back here with ?sso_token=...
   useEffect(() => {
-    if (ssoEnabled && isTokenLoaded && authData?.token) handleIframeTokenLogin(authData.token, authData.email, authData.name);
+    const ssoToken = searchParams.get('sso_token')
+    const ssoEmail = searchParams.get('sso_email') || ''
+    const ssoName  = searchParams.get('sso_name')  || ''
+    if (ssoToken) {
+      console.log('✅ SSO token received via redirect')
+      // Clean URL — remove sso params without page reload
+      const clean = window.location.pathname + '?sso=1'
+      window.history.replaceState({}, '', clean)
+      handleIframeTokenLogin(ssoToken, ssoEmail, ssoName)
+    }
+  }, [])
+
+  // ── Redirect to SalesDriver SSO relay when sso=1 and no token yet ──
+  useEffect(() => {
+    if (!ssoEnabled) return
+    // If we already have sso_token in URL, don't redirect again
+    if (searchParams.get('sso_token')) return
+    // Redirect to SalesDriver sso-relay.html
+    const redirectBack = window.location.origin + '/login?sso=1'
+    const relayUrl = 'https://salesdriver.io/sso-relay.html?redirect=' + encodeURIComponent(redirectBack)
+    console.log('🔄 Redirecting to SalesDriver SSO relay...')
+    window.location.replace(relayUrl)
+  }, [ssoEnabled])
+
+  // Listen for AUTH_TOKEN postMessage — fallback for same-origin
+  const { isTokenLoaded, authData } = useIframeAuth(false) // disabled — using redirect flow
+  useEffect(() => {
+    if (isTokenLoaded && authData?.token) handleIframeTokenLogin(authData.token, authData.email, authData.name);
   }, [isTokenLoaded]);
 
   async function handleIframeTokenLogin(token, email, name) {
@@ -168,9 +197,6 @@ const LoginPage = () => {
       pageTitle="Access Your Account"
       welcomeMessage="Enter your credentials below to access your workspace and manage your projects."
     >
-      {ssoEnabled && (
-        <iframe src="https://salesdriver.io/signin" style={{ position: 'absolute', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none', border: 'none' }} title="SalesDriver Auth" aria-hidden="true" />
-      )}
       <motion.div className="flex flex-col w-full h-full" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
         <header>
           <motion.h2 variants={itemVariants} className="mb-8 text-3xl font-bold text-center text-card-foreground">
