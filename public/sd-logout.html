@@ -26,10 +26,11 @@
   try {
     localStorage.setItem('sd_logout', Date.now().toString());
     console.log('[sd-logout] sd_logout flag set:', localStorage.getItem('sd_logout'));
+    // Keep flag for 10 seconds instead of 3 to ensure polling catches it
     setTimeout(function() { 
       localStorage.removeItem('sd_logout'); 
-      console.log('[sd-logout] sd_logout flag removed after 3s');
-    }, 3000);
+      console.log('[sd-logout] sd_logout flag removed after 10s');
+    }, 10000);
   } catch(e) {
     console.error('[sd-logout] Error setting sd_logout flag:', e);
   }

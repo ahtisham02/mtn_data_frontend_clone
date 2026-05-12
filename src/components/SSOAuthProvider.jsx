@@ -15,6 +15,12 @@ function SSOHandler() {
   const dispatch  = useDispatch();
   const navigate  = useNavigate();
 
+  // Log when component mounts
+  useEffect(() => {
+    console.log('[MTN Data] SSOHandler component mounted');
+    return () => console.log('[MTN Data] SSOHandler component unmounted');
+  }, []);
+
   // Logout via postMessage / BroadcastChannel
   useEffect(() => {
     if (!loggedOut) return;
