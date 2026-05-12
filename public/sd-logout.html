@@ -10,7 +10,7 @@
   console.log('[sd-logout] Current localStorage before clear:', Object.keys(localStorage));
 
   var keys = ['access_token', 'userToken', 'salesdriver_email', 'salesdriver_name',
-              'sd_user_email', 'sd_user_name'];
+              'sd_user_email', 'sd_user_name', 'persist:auth', 'persist:root'];
   keys.forEach(function(k) { 
     try { 
       if (localStorage.getItem(k)) {
