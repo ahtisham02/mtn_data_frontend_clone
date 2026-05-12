@@ -126,13 +126,15 @@ const LoginPage = () => {
   }
 
   const handleAuthSuccess = async (loginResponseData) => {
-    if (!loginResponseData?.token) {
+    const token = loginResponseData?.accessToken || loginResponseData?.token;
+    if (!token) {
       throw new Error("Login failed: No token received.");
     }
-    const { token } = loginResponseData;    
     
-  const profileResponse = await apiRequest("get", "/user/profile", null, token);
+    localStorage.setItem('userToken', token);
+    localStorage.setItem('access_token', token);
 
+    const profileResponse = await apiRequest("get", "/user/profile", null, token);
     const userData = profileResponse.data;
 
     dispatch(setUserInfo({ token, data: userData }));
