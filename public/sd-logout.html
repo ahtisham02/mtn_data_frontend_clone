@@ -3,29 +3,27 @@
 <head><meta charset="utf-8" /><title>Logout</title></head>
 <body>
 <script>
-  // Called by SalesDriver broadcastLogout via hidden iframe
-  // This page runs in MTN Data's origin, so it CAN access MTN Data's localStorage
-  // After clearing, it redirects to force logout
+  // Called by SalesDriver via iframe when user logs out
+  // Clears MTN Data session and sets flag for polling
 
-  console.log('[sd-logout] MTN Data logout page loaded');
+  console.log('[sd-logout] Clearing MTN Data session...');
 
+  // Clear all auth keys
   var keys = ['access_token', 'userToken', 'salesdriver_email', 'salesdriver_name',
               'sd_user_email', 'sd_user_name', 'persist:auth', 'persist:root', 'persist:credits'];
-  keys.forEach(function(k) { 
-    try { 
-      localStorage.removeItem(k); 
-      console.log('[sd-logout] Removed:', k);
-    } catch(e) {
-      console.error('[sd-logout] Error removing:', k, e);
-    } 
-  });
+  keys.forEach(function(k) { try { localStorage.removeItem(k); } catch(e) {} });
 
-  console.log('[sd-logout] MTN Data session cleared, redirecting to login...');
+  // Set sd_logout flag so SSOAuthProvider polling picks it up
+  try {
+    localStorage.setItem('sd_logout', Date.now().toString());
+    setTimeout(function() { localStorage.removeItem('sd_logout'); }, 3000);
+  } catch(e) {}
 
-  // Redirect to login page - this forces MTN Data to logout
-  setTimeout(function() {
-    window.top.location.href = 'https://mtndata.com/login';
-  }, 100);
+  console.log('[sd-logout] Session cleared, redirecting to login...');
+
+  // Redirect to login page
+  var redirect = new URLSearchParams(window.location.search).get('redirect') || '/login';
+  window.location.replace(redirect);
 </script>
 </body>
 </html>

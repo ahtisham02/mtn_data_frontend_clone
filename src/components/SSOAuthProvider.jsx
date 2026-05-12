@@ -29,42 +29,23 @@ function SSOHandler() {
     navigate("/login", { replace: true });
   }, [loggedOut, dispatch, navigate]);
 
-  // Logout detection - Multiple fallback methods
-  
-  // Method 1: postMessage listener (most reliable for iframes)
-  useEffect(() => {
-    const handleMessage = (event) => {
-      // Accept messages from mtndata.com or salesdriver.io
-      const allowedOrigins = ['https://mtndata.com', 'https://www.mtndata.com', 'https://salesdriver.io'];
-      if (!allowedOrigins.includes(event.origin)) return;
-      
-      if (event.data?.type === 'SD_LOGOUT') {
-        console.log('[MTN Data] Logout detected via postMessage from:', event.origin);
-        performLogout('postMessage');
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    console.log('[MTN Data] postMessage listener active');
-    return () => window.removeEventListener('message', handleMessage);
-  }, [dispatch, navigate]);
-  
-  // Method 2: Polling for sd_logout flag (set by iframe)
+  // Polling fallback — check sd_logout key every second
+  // Needed because storage event doesn't fire in same tab
   useEffect(() => {
     console.log('[MTN Data] Logout polling started');
-    let checkCount = 0;
     const interval = setInterval(() => {
-      checkCount++;
-      const sdLogoutFlag = localStorage.getItem('sd_logout');
-      const sdLogoutTrigger = localStorage.getItem('sd_logout_trigger');
-      
-      // Log every 10 checks (every 10 seconds)
-      if (checkCount % 10 === 0) {
-        console.log('[MTN Data] Polling check #' + checkCount + ', sd_logout:', sdLogoutFlag);
-      }
-      
-      if (sdLogoutFlag || sdLogoutTrigger) {
-        console.log('[MTN Data] sd_logout flag detected via polling');
-        performLogout('polling');
+      const sdLogout = localStorage.getItem('sd_logout');
+      if (sdLogout) {
+        console.log('[MTN Data] sd_logout flag detected, logging out...');
+        localStorage.removeItem('sd_logout');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('persist:auth');
+        localStorage.removeItem('persist:root');
+        localStorage.removeItem('persist:credits');
+        dispatch(removeUserInfo());
+        toast.info("Logged out from SalesDriver");
+        navigate("/login", { replace: true });
       }
     }, 1000);
     return () => {
@@ -72,76 +53,6 @@ function SSOHandler() {
       clearInterval(interval);
     };
   }, [dispatch, navigate]);
-
-  // Method 3: BroadcastChannel API
-  useEffect(() => {
-    try {
-      const channel = new BroadcastChannel('salesdriver_auth');
-      channel.onmessage = (event) => {
-        if (event.data?.type === 'LOGOUT') {
-          console.log('[MTN Data] Logout detected via BroadcastChannel');
-          performLogout('BroadcastChannel');
-        }
-      };
-      console.log('[MTN Data] BroadcastChannel listener active');
-      return () => channel.close();
-    } catch (e) {
-      console.warn('[MTN Data] BroadcastChannel not supported:', e);
-    }
-  }, [dispatch, navigate]);
-
-  // Method 4: Storage event listener (cross-tab)
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'sd_logout_broadcast' || e.key === 'sd_logout' || e.key === 'sd_logout_trigger') {
-        console.log('[MTN Data] Logout detected via storage event:', e.key);
-        performLogout('storage event');
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    console.log('[MTN Data] Storage event listener active');
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [dispatch, navigate]);
-
-  // Method 5: Periodic token validation (every 2 seconds) - MOST RELIABLE
-  useEffect(() => {
-    console.log('[MTN Data] Token validation polling started');
-    const interval = setInterval(() => {
-      const token = localStorage.getItem('access_token') || localStorage.getItem('userToken');
-      const persistAuth = localStorage.getItem('persist:auth');
-      
-      // Parse persist:auth to check if it has a token
-      let hasPersistedToken = false;
-      if (persistAuth) {
-        try {
-          const parsed = JSON.parse(persistAuth);
-          hasPersistedToken = parsed.token || parsed.userInfo?.token;
-        } catch(e) {}
-      }
-      
-      // If no token found anywhere, user has been logged out
-      if (!token && !hasPersistedToken) {
-        console.log('[MTN Data] No auth token found in validation check');
-        performLogout('token validation');
-      }
-    }, 2000); // Check every 2 seconds
-    return () => clearInterval(interval);
-  }, [dispatch, navigate]);
-
-  // Helper function to perform logout
-  const performLogout = (method) => {
-    console.log('[MTN Data] Performing logout via:', method);
-    localStorage.removeItem('sd_logout');
-    localStorage.removeItem('sd_logout_broadcast');
-    localStorage.removeItem('sd_logout_trigger');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('persist:auth');
-    localStorage.removeItem('persist:root');
-    dispatch(removeUserInfo());
-    toast.info("Logged out from SalesDriver");
-    navigate("/login", { replace: true });
-  };
 
   // SSO login — only when ?sso=1
   useEffect(() => {
