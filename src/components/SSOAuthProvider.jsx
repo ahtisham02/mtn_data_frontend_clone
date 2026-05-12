@@ -103,18 +103,28 @@ function SSOHandler() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [dispatch, navigate]);
 
-  // Method 5: Periodic token validation (every 5 seconds)
+  // Method 5: Periodic token validation (every 2 seconds) - MOST RELIABLE
   useEffect(() => {
+    console.log('[MTN Data] Token validation polling started');
     const interval = setInterval(() => {
       const token = localStorage.getItem('access_token') || localStorage.getItem('userToken');
       const persistAuth = localStorage.getItem('persist:auth');
       
-      // If no token found, user might have been logged out
-      if (!token && !persistAuth) {
-        console.log('[MTN Data] No auth token found, logging out');
+      // Parse persist:auth to check if it has a token
+      let hasPersistedToken = false;
+      if (persistAuth) {
+        try {
+          const parsed = JSON.parse(persistAuth);
+          hasPersistedToken = parsed.token || parsed.userInfo?.token;
+        } catch(e) {}
+      }
+      
+      // If no token found anywhere, user has been logged out
+      if (!token && !hasPersistedToken) {
+        console.log('[MTN Data] No auth token found in validation check');
         performLogout('token validation');
       }
-    }, 5000);
+    }, 2000); // Check every 2 seconds
     return () => clearInterval(interval);
   }, [dispatch, navigate]);
 

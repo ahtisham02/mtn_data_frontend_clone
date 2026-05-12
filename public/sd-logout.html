@@ -4,67 +4,28 @@
 <body>
 <script>
   // Called by SalesDriver broadcastLogout via hidden iframe
-  // Clears MTN Data session and notifies parent via postMessage
+  // This page runs in MTN Data's origin, so it CAN access MTN Data's localStorage
+  // After clearing, it redirects to force logout
 
   console.log('[sd-logout] MTN Data logout page loaded');
-  console.log('[sd-logout] Current localStorage before clear:', Object.keys(localStorage));
 
   var keys = ['access_token', 'userToken', 'salesdriver_email', 'salesdriver_name',
-              'sd_user_email', 'sd_user_name', 'persist:auth', 'persist:root'];
+              'sd_user_email', 'sd_user_name', 'persist:auth', 'persist:root', 'persist:credits'];
   keys.forEach(function(k) { 
     try { 
-      if (localStorage.getItem(k)) {
-        console.log('[sd-logout] Removing key:', k);
-        localStorage.removeItem(k); 
-      }
+      localStorage.removeItem(k); 
+      console.log('[sd-logout] Removed:', k);
     } catch(e) {
-      console.error('[sd-logout] Error removing key:', k, e);
+      console.error('[sd-logout] Error removing:', k, e);
     } 
   });
 
-  // Set sd_logout flag in THIS page's localStorage
-  try {
-    localStorage.setItem('sd_logout', Date.now().toString());
-    console.log('[sd-logout] sd_logout flag set in iframe localStorage:', localStorage.getItem('sd_logout'));
-  } catch(e) {
-    console.error('[sd-logout] Error setting sd_logout flag:', e);
-  }
+  console.log('[sd-logout] MTN Data session cleared, redirecting to login...');
 
-  // CRITICAL: Send postMessage to parent window to trigger logout
-  // This works even when iframe localStorage is isolated
-  try {
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({
-        type: 'SD_LOGOUT',
-        source: 'mtndata_logout_relay',
-        timestamp: Date.now()
-      }, 'https://mtndata.com');
-      console.log('[sd-logout] Sent postMessage to parent window');
-    }
-    
-    // Also try to send to opener (if opened in popup)
-    if (window.opener) {
-      window.opener.postMessage({
-        type: 'SD_LOGOUT',
-        source: 'mtndata_logout_relay',
-        timestamp: Date.now()
-      }, 'https://mtndata.com');
-      console.log('[sd-logout] Sent postMessage to opener window');
-    }
-  } catch(e) {
-    console.error('[sd-logout] Error sending postMessage:', e);
-  }
-
-  // Try to trigger storage event by setting/removing a key
-  try {
-    localStorage.setItem('sd_logout_trigger', Date.now().toString());
-    setTimeout(function() {
-      localStorage.removeItem('sd_logout_trigger');
-    }, 100);
-  } catch(e) {}
-
-  console.log('[sd-logout] MTN Data session cleared');
-  console.log('[sd-logout] Current localStorage after clear:', Object.keys(localStorage));
+  // Redirect to login page - this forces MTN Data to logout
+  setTimeout(function() {
+    window.top.location.href = 'https://mtndata.com/login';
+  }, 100);
 </script>
 </body>
 </html>
