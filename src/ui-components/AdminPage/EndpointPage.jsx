@@ -262,7 +262,9 @@ export default function EndpointPage({ endpoint }) {
         data: responseData,
       });
       // Refresh credits from profile API after every endpoint test
-      dispatch(fetchProfile());
+      await dispatch(fetchProfile()).unwrap();
+      // Also explicitly fetch credits to ensure navbar updates
+      await dispatch(fetchCredits()).unwrap();
     } catch (error) {
       const endTime = performance.now();
       setTestResult({
