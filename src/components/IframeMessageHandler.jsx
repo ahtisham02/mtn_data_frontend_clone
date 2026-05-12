@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
 const ALLOWED_ORIGINS = [
-  'https://salesdriver.io',
-  'https://mtndata.com',
+  'http://localhost:5173',
+  'http://localhost:5175',
   'https://salesdriver.io',
   'https://www.salesdriver.io',
   'https://mtndata.com',

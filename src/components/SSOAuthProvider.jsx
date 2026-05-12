@@ -2,11 +2,10 @@ import { useIframeAuth } from "../hooks/useIframeAuth";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 import { setUserInfo, removeUserInfo, updateUserProfile } from "../auth/authSlice";
 import { toast } from "react-toastify";
+import apiRequest from "../utils/apiRequest";
 
-const AUTH_BASE_URL = import.meta.env.VITE_AUTH_API_BASE_URL || "http://66.29.128.138:4031";
 const API_BASE_URL  = import.meta.env.VITE_API_BASE_URL;
 
 function SSOHandler() {
@@ -44,37 +43,26 @@ function SSOHandler() {
     if (!ssoEnabled || !isTokenLoaded || !authData?.token) return;
     const { token, email, name } = authData;
 
-    axios.get(`${AUTH_BASE_URL}/user`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(async (res) => {
-        const raw = res.data;
-        const user = {
-          ...raw,
-          first_name: raw.firstName || raw.first_name || "",
-          last_name:  raw.lastName  || raw.last_name  || "",
-          name: raw.fullName || `${raw.firstName || ""} ${raw.lastName || ""}`.trim() || raw.email,
-        };
-        localStorage.setItem("userToken", token);
-        dispatch(setUserInfo({ token, data: user }));
-        toast.success(`Welcome${name ? ', ' + name : ''}! Logged in via SalesDriver`);
+    // Store token and set minimal auth
+    localStorage.setItem("userToken", token);
+    localStorage.setItem("access_token", token);
+    dispatch(setUserInfo({ token, data: { email, name } }));
 
-        // ── Fetch /user/profile to get the hash after SSO login ──
-        try {
-          const profileRes = await axios.get(
-            `${API_BASE_URL}/user/profile`,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-          if (profileRes.data?.profile) {
-            dispatch(updateUserProfile(profileRes.data.profile));
-          }
-        } catch (profileErr) {
-          console.warn("Could not fetch profile after SSO login:", profileErr?.response?.status);
+    // Fetch MTN Data profile
+    apiRequest('get', '/user/profile', null, token)
+      .then(async (res) => {
+        const profileData = res.data?.profile || res.data;
+        if (profileData) {
+          dispatch(updateUserProfile(profileData));
         }
+        toast.success(`Welcome${name ? ', ' + name : ''}! Logged in via SalesDriver`);
 
         const path = window.location.pathname;
         if (path === "/login" || path === "/signup" || path === "/")
           navigate("/dashboard", { replace: true });
       })
-      .catch(() => {
+      .catch((err) => {
+        console.warn("Profile fetch failed:", err);
         localStorage.removeItem("access_token");
         localStorage.removeItem("userToken");
       });
