@@ -30,21 +30,40 @@ function SSOHandler() {
   }, [loggedOut, dispatch, navigate]);
 
   // Logout detection - Multiple fallback methods
-  // Method 1: Polling for sd_logout flag (set by iframe)
+  
+  // Method 1: postMessage listener (most reliable for iframes)
+  useEffect(() => {
+    const handleMessage = (event) => {
+      // Accept messages from mtndata.com or salesdriver.io
+      const allowedOrigins = ['https://mtndata.com', 'https://www.mtndata.com', 'https://salesdriver.io'];
+      if (!allowedOrigins.includes(event.origin)) return;
+      
+      if (event.data?.type === 'SD_LOGOUT') {
+        console.log('[MTN Data] Logout detected via postMessage from:', event.origin);
+        performLogout('postMessage');
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    console.log('[MTN Data] postMessage listener active');
+    return () => window.removeEventListener('message', handleMessage);
+  }, [dispatch, navigate]);
+  
+  // Method 2: Polling for sd_logout flag (set by iframe)
   useEffect(() => {
     console.log('[MTN Data] Logout polling started');
     let checkCount = 0;
     const interval = setInterval(() => {
       checkCount++;
       const sdLogoutFlag = localStorage.getItem('sd_logout');
+      const sdLogoutTrigger = localStorage.getItem('sd_logout_trigger');
       
       // Log every 10 checks (every 10 seconds)
       if (checkCount % 10 === 0) {
         console.log('[MTN Data] Polling check #' + checkCount + ', sd_logout:', sdLogoutFlag);
       }
       
-      if (sdLogoutFlag) {
-        console.log('[MTN Data] sd_logout flag detected via polling:', sdLogoutFlag);
+      if (sdLogoutFlag || sdLogoutTrigger) {
+        console.log('[MTN Data] sd_logout flag detected via polling');
         performLogout('polling');
       }
     }, 1000);
@@ -54,7 +73,7 @@ function SSOHandler() {
     };
   }, [dispatch, navigate]);
 
-  // Method 2: BroadcastChannel API
+  // Method 3: BroadcastChannel API
   useEffect(() => {
     try {
       const channel = new BroadcastChannel('salesdriver_auth');
@@ -71,10 +90,10 @@ function SSOHandler() {
     }
   }, [dispatch, navigate]);
 
-  // Method 3: Storage event listener (cross-tab)
+  // Method 4: Storage event listener (cross-tab)
   useEffect(() => {
     const handleStorageChange = (e) => {
-      if (e.key === 'sd_logout_broadcast' || e.key === 'sd_logout') {
+      if (e.key === 'sd_logout_broadcast' || e.key === 'sd_logout' || e.key === 'sd_logout_trigger') {
         console.log('[MTN Data] Logout detected via storage event:', e.key);
         performLogout('storage event');
       }
@@ -84,7 +103,7 @@ function SSOHandler() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [dispatch, navigate]);
 
-  // Method 4: Periodic token validation (every 5 seconds)
+  // Method 5: Periodic token validation (every 5 seconds)
   useEffect(() => {
     const interval = setInterval(() => {
       const token = localStorage.getItem('access_token') || localStorage.getItem('userToken');
@@ -104,6 +123,7 @@ function SSOHandler() {
     console.log('[MTN Data] Performing logout via:', method);
     localStorage.removeItem('sd_logout');
     localStorage.removeItem('sd_logout_broadcast');
+    localStorage.removeItem('sd_logout_trigger');
     localStorage.removeItem('access_token');
     localStorage.removeItem('userToken');
     localStorage.removeItem('persist:auth');
