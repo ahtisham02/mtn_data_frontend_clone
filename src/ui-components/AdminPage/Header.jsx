@@ -117,11 +117,11 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, closeSidebar }
             <p className="text-[13px] font-medium">
               Credits:
               <span className="ml-1.5 font-semibold">
-                <CountUp start={0} end={creditsInfo?.remainingCredits || 0} duration={1} separator="," />
+                <CountUp key={`credits-${creditsInfo?.remainingCredits}`} start={0} end={creditsInfo?.remainingCredits || 0} duration={1} separator="," />
               </span>
               <span className="opacity-70">
                 {" / "}
-                <CountUp start={0} end={creditsInfo?.totalCredits || 0} duration={1} separator="," />
+                <CountUp key={`total-credits-${creditsInfo?.totalCredits}`} start={0} end={creditsInfo?.totalCredits || 0} duration={1} separator="," />
               </span>
             </p>
           )}
@@ -132,11 +132,11 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, closeSidebar }
             <p className="text-[13px] font-medium">
               API Calls:
               <span className="ml-1.5 font-semibold">
-                 <CountUp start={0} end={creditsInfo?.remainingCalls || 0} duration={1} separator="," />
+                 <CountUp key={`calls-${creditsInfo?.remainingCalls}`} start={0} end={creditsInfo?.remainingCalls || 0} duration={1} separator="," />
               </span>
               <span className="opacity-70">
                 {" / "}
-                 <CountUp start={0} end={creditsInfo?.totalCalls || 0} duration={1} separator="," />
+                 <CountUp key={`total-calls-${creditsInfo?.totalCalls}`} start={0} end={creditsInfo?.totalCalls || 0} duration={1} separator="," />
               </span>
             </p>
           )}
@@ -208,11 +208,11 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, closeSidebar }
                     <p className="text-[13px] font-medium">
                       Credits:
                       <span className="ml-1.5 font-semibold">
-                        <CountUp end={creditsInfo?.remainingCredits || 0} duration={1}/>
+                        <CountUp key={`m-credits-${creditsInfo?.remainingCredits}`} end={creditsInfo?.remainingCredits || 0} duration={1}/>
                       </span>
                       <span className="opacity-70">
                         {" / "}
-                        <CountUp end={creditsInfo?.totalCredits || 0} duration={1}/>
+                        <CountUp key={`m-total-credits-${creditsInfo?.totalCredits}`} end={creditsInfo?.totalCredits || 0} duration={1}/>
                       </span>
                     </p>
                   </div>
@@ -221,11 +221,11 @@ export default function Header({ isSidebarOpen, setIsSidebarOpen, closeSidebar }
                     <p className="text-[13px] font-medium">
                       API Calls:
                       <span className="ml-1.5 font-semibold">
-                        <CountUp end={creditsInfo?.remainingCalls || 0} duration={1}/>
+                        <CountUp key={`m-calls-${creditsInfo?.remainingCalls}`} end={creditsInfo?.remainingCalls || 0} duration={1}/>
                       </span>
                       <span className="opacity-70">
                         {" / "}
-                        <CountUp end={creditsInfo?.totalCalls || 0} duration={1}/>
+                        <CountUp key={`m-total-calls-${creditsInfo?.totalCalls}`} end={creditsInfo?.totalCalls || 0} duration={1}/>
                       </span>
                     </p>
                   </div>

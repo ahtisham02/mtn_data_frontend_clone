@@ -31,11 +31,9 @@ export function useIframeAuth(enabled = true) {
     const handleMessage = (event) => {
       const allowed = [
         'https://salesdriver.io',
-        'http://localhost:5174',
+        'http://localhost:5173',
         'https://mtndata.com',
-        'https://salesdriver.io',
         'https://www.salesdriver.io',
-        'https://mtndata.com',
       ]
       if (!allowed.includes(event.origin)) return
       const msg = event.data

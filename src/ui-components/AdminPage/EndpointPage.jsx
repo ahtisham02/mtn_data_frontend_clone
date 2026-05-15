@@ -261,10 +261,16 @@ export default function EndpointPage({ endpoint }) {
         bodySize: new Blob([JSON.stringify(responseData)]).size,
         data: responseData,
       });
-      // Refresh credits from profile API after every endpoint test
-      await dispatch(fetchProfile()).unwrap();
-      // Also explicitly fetch credits to ensure navbar updates
-      await dispatch(fetchCredits()).unwrap();
+
+      // Step 1: refresh profile (this also triggers fetchCredits internally via userSlice)
+      try {
+        await dispatch(fetchProfile()).unwrap();
+      } catch (_) { /* non-fatal */ }
+
+      // Step 2: explicitly re-fetch credits so the navbar CountUp re-renders with new key
+      try {
+        await dispatch(fetchCredits()).unwrap();
+      } catch (_) { /* non-fatal */ }
     } catch (error) {
       const endTime = performance.now();
       setTestResult({

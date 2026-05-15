@@ -77,10 +77,13 @@ const LoginPage = () => {
     if (!ssoEnabled) return
     // If we already have sso_token in URL, don't redirect again
     if (searchParams.get('sso_token')) return
+    // Dynamic URL detection - use localhost when on localhost, production URL otherwise
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    const salesDriverUrl = isLocalhost ? 'http://localhost:5173' : 'https://salesdriver.io'
     // Redirect to SalesDriver sso-relay.html
     const redirectBack = window.location.origin + '/login?sso=1'
-    const relayUrl = 'https://salesdriver.io/sso-relay.html?redirect=' + encodeURIComponent(redirectBack)
-    console.log('🔄 Redirecting to SalesDriver SSO relay...')
+    const relayUrl = salesDriverUrl + '/sso-relay.html?redirect=' + encodeURIComponent(redirectBack)
+    console.log('🔄 Redirecting to SalesDriver SSO relay...', relayUrl)
     window.location.replace(relayUrl)
   }, [ssoEnabled])
 
