@@ -19,8 +19,11 @@ export default function IframeMessageHandler() {
       if (event.data?.type === 'LOGOUT') {
         localStorage.removeItem('access_token')
         localStorage.removeItem('userToken')
+        localStorage.removeItem('salesdriver_email')
+        localStorage.removeItem('salesdriver_name')
+        // Set sd_logout so both storage event (cross-tab) and polling (same-tab) pick it up
         localStorage.setItem('sd_logout', Date.now().toString())
-        setTimeout(() => localStorage.removeItem('sd_logout'), 2000)
+        setTimeout(() => localStorage.removeItem('sd_logout'), 3000)
         event.source?.postMessage({ type: 'LOGOUT_CONFIRMED' }, event.origin)
       }
     }

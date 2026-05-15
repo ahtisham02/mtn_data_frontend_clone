@@ -11,7 +11,7 @@ const API_BASE_URL  = import.meta.env.VITE_API_BASE_URL;
 function SSOHandler() {
   const location  = useLocation();
   const ssoEnabled = new URLSearchParams(location.search).get('sso') === '1';
-  const { isTokenLoaded, authData, loggedOut } = useIframeAuth(false); // Always listen for logout
+  const { isTokenLoaded, authData, loggedOut } = useIframeAuth(ssoEnabled); // listen for token only when sso=1
   const dispatch  = useDispatch();
   const navigate  = useNavigate();
 

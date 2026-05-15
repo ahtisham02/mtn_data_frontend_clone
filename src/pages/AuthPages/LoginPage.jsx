@@ -88,7 +88,7 @@ const LoginPage = () => {
   }, [ssoEnabled])
 
   // Listen for AUTH_TOKEN postMessage — fallback for same-origin
-  const { isTokenLoaded, authData } = useIframeAuth(false) // disabled — using redirect flow
+  const { isTokenLoaded, authData } = useIframeAuth(true) // always listen for token via postMessage
   useEffect(() => {
     if (isTokenLoaded && authData?.token) handleIframeTokenLogin(authData.token, authData.email, authData.name);
   }, [isTokenLoaded]);

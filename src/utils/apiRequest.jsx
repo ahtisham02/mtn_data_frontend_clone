@@ -1,5 +1,4 @@
 import axios from "axios";
-import { store } from "../store/store";
 import { removeUserInfo, updateUserProfile } from "../auth/authSlice";
 import { toast } from "react-toastify";
 
@@ -27,8 +26,10 @@ const isRetry401 = (url) =>
 // Fetch fresh profile to get updated hash, then retry the original request
 const refreshProfileAndRetry = async (config) => {
   try {
-    const state = store.getState();
-    const token = state.auth.userToken;
+    const token =
+      window.__store__?.getState()?.auth?.userToken ||
+      localStorage.getItem("access_token") ||
+      localStorage.getItem("userToken");
     if (!token) return null;
 
     // Hit profile API to get fresh data
@@ -38,10 +39,10 @@ const refreshProfileAndRetry = async (config) => {
     );
     const profile = profileRes.data?.profile || profileRes.data;
     if (profile) {
-      store.dispatch(updateUserProfile(profile));
+      window.__store__?.dispatch(updateUserProfile(profile));
     }
 
-    // Retry original request (headers already set, just re-execute)
+    // Retry original request
     return await axios(config);
   } catch (retryError) {
     console.warn("Retry after profile refresh failed:", retryError?.response?.status);
@@ -49,14 +50,49 @@ const refreshProfileAndRetry = async (config) => {
   }
 };
 
+// Prevent multiple simultaneous 401 logouts
+let isLoggingOut = false;
+
+const handle401Logout = () => {
+  if (isLoggingOut) return;
+  isLoggingOut = true;
+
+  // Clear all auth keys from localStorage
+  [
+    "userToken", "access_token", "salesdriver_email", "salesdriver_name",
+    "persist:auth", "persist:root", "persist:credits",
+  ].forEach((k) => { try { localStorage.removeItem(k); } catch (_) {} });
+
+  // Dispatch Redux logout via window.__store__ (avoids circular dependency)
+  try {
+    window.__store__?.dispatch(removeUserInfo());
+  } catch (_) {}
+
+  toast.error("Your session has expired. Please log in again.");
+
+  setTimeout(() => {
+    isLoggingOut = false;
+    window.location.href = "/login";
+  }, 1500);
+};
+
 const apiRequest = async (method, url, data = {}, token, headers = {}) => {
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  // Always resolve token: explicit param → window store → localStorage
+  const resolvedToken =
+    token ||
+    window.__store__?.getState()?.auth?.userToken ||
+    localStorage.getItem("access_token") ||
+    localStorage.getItem("userToken") ||
+    null;
+
   const config = {
     method: method.toLowerCase(),
     url: `${BASE_URL}${url}`,
     credentials: "include",
     headers: {
-      Authorization: `Bearer ${token}`,
+      ...(resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : {}),
       ...headers,
     },
   };
@@ -89,10 +125,8 @@ const apiRequest = async (method, url, data = {}, token, headers = {}) => {
         throw error;
       }
       if (!isSilent401(url)) {
-        console.log("Unauthorized request. Logging out user.");
-        store.dispatch(removeUserInfo());
-        window.location.href = "/login";
-        toast.error("Your session has expired. Please log in again.");
+        console.warn(`[apiRequest] 401 on ${url} — session expired, logging out`);
+        handle401Logout();
       }
     }
     throw error;

@@ -40,4 +40,7 @@ export const store = configureStore({
     }),
 });
 
+// Make store accessible to apiRequest without creating a circular dependency
+window.__store__ = store;
+
 export const persistor = persistStore(store);
